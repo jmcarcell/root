@@ -987,8 +987,8 @@ endforeach()
 
 if(xrootd AND NOT builtin_xrootd)
   message(STATUS "Looking for XROOTD")
-  find_package(XROOTD)
-  if(NOT XROOTD_FOUND)
+  find_package(XRootD)
+  if(NOT XRootD_FOUND)
     if(fail-on-missing)
       message(FATAL_ERROR "XROOTD not found. Set environment variable XRDSYS to point to your XROOTD installation, "
                           "or include the installation of XROOTD in the CMAKE_PREFIX_PATH. "
