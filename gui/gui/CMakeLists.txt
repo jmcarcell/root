@@ -208,3 +208,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(Gui
 )
 
 target_include_directories(Gui PRIVATE ${CMAKE_SOURCE_DIR}/gui/ged/inc)
+
+# Unity builds can merge unrelated translation units and trigger ODR violations
+# in legacy GUI sources (e.g. duplicated enums/statics across files).
+set_target_properties(Gui PROPERTIES UNITY_BUILD OFF)

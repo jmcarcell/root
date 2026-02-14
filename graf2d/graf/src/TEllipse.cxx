@@ -20,9 +20,7 @@
 #include "TPoint.h"
 #include "TVirtualX.h"
 
-
-constexpr Double_t kPI = TMath::Pi();
-
+constexpr Double_t kPITEllipse = TMath::Pi();
 
 /** \class TEllipse
 \ingroup BasicGraphics
@@ -138,8 +136,8 @@ Int_t TEllipse::DistancetoPrimitive(Int_t px, Int_t py)
    Double_t dxnr = x - fX1;
    Double_t dynr = y - fY1;
 
-   Double_t ct = TMath::Cos(kPI*GetTheta()/180.0);
-   Double_t st = TMath::Sin(kPI*GetTheta()/180.0);
+   Double_t ct = TMath::Cos(kPITEllipse * GetTheta() / 180.0);
+   Double_t st = TMath::Sin(kPITEllipse * GetTheta() / 180.0);
 
    Double_t dx =  dxnr*ct + dynr*st;
    Double_t dy = -dxnr*st + dynr*ct;
@@ -173,7 +171,8 @@ void TEllipse::Draw(Option_t *option)
 ////////////////////////////////////////////////////////////////////////////////
 /// Draw this ellipse with new coordinates.
 
-TEllipse *TEllipse::DrawEllipse(Double_t x1, Double_t y1,Double_t r1,Double_t r2,Double_t phimin,Double_t phimax,Double_t theta,Option_t *option)
+TEllipse *TEllipse::DrawEllipse(Double_t x1, Double_t y1, Double_t r1, Double_t r2, Double_t phimin, Double_t phimax,
+                                Double_t theta, Option_t *option)
 {
    TEllipse *newellipse = new TEllipse(x1, y1, r1, r2, phimin, phimax,theta);
    TAttLine::Copy(*newellipse);
@@ -228,11 +227,11 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
          oldY1 = fY1;
          oldR1 = fR1;
          oldR2 = fR2;
-         dphi = (fPhimax-fPhimin)*kPI/(180*np);
-         ct   = TMath::Cos(kPI*fTheta/180);
-         st   = TMath::Sin(kPI*fTheta/180);
+         dphi = (fPhimax-fPhimin)*kPITEllipse/(180*np);
+         ct   = TMath::Cos(kPITEllipse*fTheta/180);
+         st   = TMath::Sin(kPITEllipse*fTheta/180);
          for (i=0;i<np;i++) {
-            angle = fPhimin*kPI/180 + Double_t(i)*dphi;
+            angle = fPhimin*kPITEllipse/180 + Double_t(i)*dphi;
             dx    = fR1*TMath::Cos(angle);
             dy    = fR2*TMath::Sin(angle);
             x[i]  = gPad->XtoAbsPixel(fX1 + dx*ct - dy*st);
@@ -279,8 +278,7 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
          gVirtualX->DrawLine(px1-4, pTy+4, px1-4, pTy-4);
          gVirtualX->DrawLine(px1-4, pTy-4, px1+4, pTy-4);
          gVirtualX->DrawLine(px1+4, pTy-4, px1+4, pTy+4);
-      }
-      else {
+      } else {
          sdx = this->GetX1()-gPad->AbsPixeltoX(px);
          sdy = this->GetY1()-gPad->AbsPixeltoY(py);
       }
@@ -297,29 +295,25 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       pRx = gPad->XtoAbsPixel(fR1+fX1);
       pTop = pL = pR = pBot = pINSIDE = kFALSE;
       if ((TMath::Abs(px - pTx) < kMaxDiff) &&
-          (TMath::Abs(py - pTy) < kMaxDiff)) {             // top edge
+          (TMath::Abs(py - pTy) < kMaxDiff)) { // top edge
          pTop = kTRUE;
          gPad->SetCursor(kTopSide);
-      }
-      else
-      if ((TMath::Abs(px - pBx) < kMaxDiff) &&
-          (TMath::Abs(py - pBy) < kMaxDiff)) {             // bottom edge
+      } else if ((TMath::Abs(px - pBx) < kMaxDiff) &&
+                 (TMath::Abs(py - pBy) < kMaxDiff)) { // bottom edge
          pBot = kTRUE;
          gPad->SetCursor(kBottomSide);
-      }
-      else
-      if ((TMath::Abs(py - pLy) < kMaxDiff) &&
-          (TMath::Abs(px - pLx) < kMaxDiff)) {             // left edge
+      } else if ((TMath::Abs(py - pLy) < kMaxDiff) &&
+                 (TMath::Abs(px - pLx) < kMaxDiff)) { // left edge
          pL = kTRUE;
          gPad->SetCursor(kLeftSide);
-      }
-      else
-      if ((TMath::Abs(py - pRy) < kMaxDiff) &&
-          (TMath::Abs(px - pRx) < kMaxDiff)) {             // right edge
+      } else if ((TMath::Abs(py - pRy) < kMaxDiff) &&
+                 (TMath::Abs(px - pRx) < kMaxDiff)) { // right edge
          pR = kTRUE;
          gPad->SetCursor(kRightSide);
+      } else {
+         pINSIDE = kTRUE;
+         gPad->SetCursor(kMove);
       }
-      else {pINSIDE= kTRUE; gPad->SetCursor(kMove); }
       pxold = px;  pyold = py;
 
       break;
@@ -392,11 +386,11 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       }
       if (pTop || pBot || pL || pR) {
          if (!opaque) {
-            dphi = (fPhimax-fPhimin)*kPI/(180*np);
-            ct   = TMath::Cos(kPI*fTheta/180);
-            st   = TMath::Sin(kPI*fTheta/180);
+            dphi = (fPhimax-fPhimin)*kPITEllipse/(180*np);
+            ct   = TMath::Cos(kPITEllipse*fTheta/180);
+            st   = TMath::Sin(kPITEllipse*fTheta/180);
             for (i=0;i<np;i++) {
-               angle = fPhimin*kPI/180 + Double_t(i)*dphi;
+               angle = fPhimin*kPITEllipse/180 + Double_t(i)*dphi;
                dx    = r1*TMath::Cos(angle);
                dy    = r2*TMath::Sin(angle);
                x[i]  = px1 + Int_t(dx*ct - dy*st);
@@ -572,16 +566,16 @@ void TEllipse::PaintEllipse(Double_t x1, Double_t y1, Double_t r1, Double_t r2,
    Double_t phi2 = TMath::Max(phimin,phimax);
 
    //set number of points approximatively proportional to the ellipse circumference
-   Double_t circ = kPI*(r1+r2)*(phi2-phi1)/360;
+   Double_t circ = kPITEllipse*(r1+r2)*(phi2-phi1)/360;
    Int_t n = (Int_t)(np*circ/((gPad->GetX2()-gPad->GetX1())+(gPad->GetY2()-gPad->GetY1())));
    if (n < 8) n= 8;
    if (n > np) n = np;
    Double_t angle,dx,dy;
-   Double_t dphi = (phi2-phi1)*kPI/(180*n);
-   Double_t ct   = TMath::Cos(kPI*theta/180);
-   Double_t st   = TMath::Sin(kPI*theta/180);
+   Double_t dphi = (phi2-phi1)*kPITEllipse/(180*n);
+   Double_t ct   = TMath::Cos(kPITEllipse*theta/180);
+   Double_t st   = TMath::Sin(kPITEllipse*theta/180);
    for (Int_t i=0;i<=n;i++) {
-      angle = phi1*kPI/180 + Double_t(i)*dphi;
+      angle = phi1*kPITEllipse/180 + Double_t(i)*dphi;
       dx    = r1*TMath::Cos(angle);
       dy    = r2*TMath::Sin(angle);
       x[i]  = gPad->XtoPad(x1 + dx*ct - dy*st);

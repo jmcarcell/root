@@ -75,93 +75,96 @@ drawing area. The widgets used are the new native ROOT GUI widgets.
 
 
 // Canvas menu command ids
+// NOTE: With CMake unity builds enabled, multiple sources can end up in the same
+// translation unit. Prefix these ids to avoid collisions with other GUI sources
+// that define similarly-named enums.
 enum ERootCanvasCommands {
-   kFileNewCanvas,
-   kFileOpen,
-   kFileSaveAs,
-   kFileSaveAsRoot,
-   kFileSaveAsC,
-   kFileSaveAsPS,
-   kFileSaveAsEPS,
-   kFileSaveAsPDF,
-   kFileSaveAsGIF,
-   kFileSaveAsJPG,
-   kFileSaveAsPNG,
-   kFileSaveAsTEX,
-   kFilePrint,
-   kFileCloseCanvas,
-   kFileQuit,
+   kCanvasFileNewCanvas,
+   kCanvasFileOpen,
+   kCanvasFileSaveAs,
+   kCanvasFileSaveAsRoot,
+   kCanvasFileSaveAsC,
+   kCanvasFileSaveAsPS,
+   kCanvasFileSaveAsEPS,
+   kCanvasFileSaveAsPDF,
+   kCanvasFileSaveAsGIF,
+   kCanvasFileSaveAsJPG,
+   kCanvasFileSaveAsPNG,
+   kCanvasFileSaveAsTEX,
+   kCanvasFilePrint,
+   kCanvasFileCloseCanvas,
+   kCanvasFileQuit,
 
-   kEditStyle,
-   kEditCut,
-   kEditCopy,
-   kEditPaste,
-   kEditClearPad,
-   kEditClearCanvas,
-   kEditUndo,
-   kEditRedo,
+   kCanvasEditStyle,
+   kCanvasEditCut,
+   kCanvasEditCopy,
+   kCanvasEditPaste,
+   kCanvasEditClearPad,
+   kCanvasEditClearCanvas,
+   kCanvasEditUndo,
+   kCanvasEditRedo,
 
-   kViewEditor,
-   kViewToolbar,
-   kViewEventStatus,
-   kViewToolTips,
-   kViewColors,
-   kViewFonts,
-   kViewMarkers,
-   kViewIconify,
-   kViewX3D,
-   kViewOpenGL,
+   kCanvasViewEditor,
+   kCanvasViewToolbar,
+   kCanvasViewEventStatus,
+   kCanvasViewToolTips,
+   kCanvasViewColors,
+   kCanvasViewFonts,
+   kCanvasViewMarkers,
+   kCanvasViewIconify,
+   kCanvasViewX3D,
+   kCanvasViewOpenGL,
 
-   kOptionAutoResize,
-   kOptionResizeCanvas,
-   kOptionMoveOpaque,
-   kOptionResizeOpaque,
-   kOptionInterrupt,
-   kOptionRefresh,
-   kOptionAutoExec,
-   kOptionStatistics,
-   kOptionHistTitle,
-   kOptionFitParams,
-   kOptionCanEdit,
+   kCanvasOptionAutoResize,
+   kCanvasOptionResizeCanvas,
+   kCanvasOptionMoveOpaque,
+   kCanvasOptionResizeOpaque,
+   kCanvasOptionInterrupt,
+   kCanvasOptionRefresh,
+   kCanvasOptionAutoExec,
+   kCanvasOptionStatistics,
+   kCanvasOptionHistTitle,
+   kCanvasOptionFitParams,
+   kCanvasOptionCanEdit,
 
-   kInspectRoot,
-   kClassesTree,
-   kFitPanel,
-   kToolsBrowser,
-   kToolsBuilder,
-   kToolsRecorder,
+   kCanvasInspectRoot,
+   kCanvasClassesTree,
+   kCanvasFitPanel,
+   kCanvasToolsBrowser,
+   kCanvasToolsBuilder,
+   kCanvasToolsRecorder,
 
-   kHelpAbout,
-   kHelpOnCanvas,
-   kHelpOnMenus,
-   kHelpOnGraphicsEd,
-   kHelpOnBrowser,
-   kHelpOnObjects,
-   kHelpOnPS,
+   kCanvasHelpAbout,
+   kCanvasHelpOnCanvas,
+   kCanvasHelpOnMenus,
+   kCanvasHelpOnGraphicsEd,
+   kCanvasHelpOnBrowser,
+   kCanvasHelpOnObjects,
+   kCanvasHelpOnPS,
 
-   kToolModify,
-   kToolArc,
-   kToolLine,
-   kToolArrow,
-   kToolDiamond,
-   kToolEllipse,
-   kToolPad,
-   kToolPave,
-   kToolPLabel,
-   kToolPText,
-   kToolPsText,
-   kToolGraph,
-   kToolCurlyLine,
-   kToolCurlyArc,
-   kToolLatex,
-   kToolMarker,
-   kToolCutG
+   kCanvasToolModify,
+   kCanvasToolArc,
+   kCanvasToolLine,
+   kCanvasToolArrow,
+   kCanvasToolDiamond,
+   kCanvasToolEllipse,
+   kCanvasToolPad,
+   kCanvasToolPave,
+   kCanvasToolPLabel,
+   kCanvasToolPText,
+   kCanvasToolPsText,
+   kCanvasToolGraph,
+   kCanvasToolCurlyLine,
+   kCanvasToolCurlyArc,
+   kCanvasToolLatex,
+   kCanvasToolMarker,
+   kCanvasToolCutG
 
 };
 
-static const char *gOpenTypes[] = { "ROOT files",   "*.root",
-                                    "All files",    "*",
-                                    0,              0 };
+static const char *gCanvasOpenTypes[] = { "ROOT files",   "*.root",
+                                     "All files",    "*",
+                                     0,              0 };
 
 static const char *gSaveAsTypes[] = { "PDF",          "*.pdf",
                                       "SVG",          "*.svg",
@@ -180,39 +183,39 @@ static const char *gSaveAsTypes[] = { "PDF",          "*.pdf",
                                       "All files",    "*",
                                       0,              0 };
 
-static ToolBarData_t gToolBarData[] = {
+static ToolBarData_t gCanvasToolBarData[] = {
    // { filename,      tooltip,            staydown,  id,              button}
-   { "newcanvas.xpm",  "New",              kFALSE,    kFileNewCanvas,  0 },
-   { "open.xpm",       "Open",             kFALSE,    kFileOpen,       0 },
-   { "save.xpm",       "Save As",          kFALSE,    kFileSaveAs,     0 },
-   { "printer.xpm",    "Print",            kFALSE,    kFilePrint,      0 },
+   { "newcanvas.xpm",  "New",              kFALSE,    kCanvasFileNewCanvas,  0 },
+   { "open.xpm",       "Open",             kFALSE,    kCanvasFileOpen,       0 },
+   { "save.xpm",       "Save As",          kFALSE,    kCanvasFileSaveAs,     0 },
+   { "printer.xpm",    "Print",            kFALSE,    kCanvasFilePrint,      0 },
    { "",               "",                 kFALSE,    -1,              0 },
-   { "interrupt.xpm",  "Interrupt",        kFALSE,    kOptionInterrupt,0 },
-   { "refresh2.xpm",   "Refresh",          kFALSE,    kOptionRefresh,  0 },
+   { "interrupt.xpm",  "Interrupt",        kFALSE,    kCanvasOptionInterrupt,0 },
+   { "refresh2.xpm",   "Refresh",          kFALSE,    kCanvasOptionRefresh,  0 },
    { "",               "",                 kFALSE,    -1,              0 },
-   { "inspect.xpm",    "Inspect",          kFALSE,    kInspectRoot,    0 },
-   { "browser.xpm",    "Browser",          kFALSE,    kToolsBrowser, 0 },
+   { "inspect.xpm",    "Inspect",          kFALSE,    kCanvasInspectRoot,    0 },
+   { "browser.xpm",    "Browser",          kFALSE,    kCanvasToolsBrowser, 0 },
    { 0,                0,                  kFALSE,    0,               0 }
 };
 
 static ToolBarData_t gToolBarData1[] = {
-   { "pointer.xpm",    "Modify",           kFALSE,    kToolModify,     0 },
-   { "arc.xpm",        "Arc",              kFALSE,    kToolArc,        0 },
-   { "line.xpm",       "Line",             kFALSE,    kToolLine,       0 },
-   { "arrow.xpm",      "Arrow",            kFALSE,    kToolArrow,      0 },
-   { "diamond.xpm",    "Diamond",          kFALSE,    kToolDiamond,    0 },
-   { "ellipse.xpm",    "Ellipse",          kFALSE,    kToolEllipse,    0 },
-   { "pad.xpm",        "Pad",              kFALSE,    kToolPad,        0 },
-   { "pave.xpm",       "Pave",             kFALSE,    kToolPave,       0 },
-   { "pavelabel.xpm",  "Pave Label",       kFALSE,    kToolPLabel,     0 },
-   { "pavetext.xpm",   "Pave Text",        kFALSE,    kToolPText,      0 },
-   { "pavestext.xpm",  "Paves Text",       kFALSE,    kToolPsText,     0 },
-   { "graph.xpm",      "Graph",            kFALSE,    kToolGraph,      0 },
-   { "curlyline.xpm",  "Curly Line",       kFALSE,    kToolCurlyLine,  0 },
-   { "curlyarc.xpm",   "Curly Arc",        kFALSE,    kToolCurlyArc,   0 },
-   { "latex.xpm",      "Text/Latex",       kFALSE,    kToolLatex,      0 },
-   { "marker.xpm",     "Marker",           kFALSE,    kToolMarker,     0 },
-   { "cut.xpm",        "Graphical Cut",    kFALSE,    kToolCutG,       0 },
+   { "pointer.xpm",    "Modify",           kFALSE,    kCanvasToolModify,     0 },
+   { "arc.xpm",        "Arc",              kFALSE,    kCanvasToolArc,        0 },
+   { "line.xpm",       "Line",             kFALSE,    kCanvasToolLine,       0 },
+   { "arrow.xpm",      "Arrow",            kFALSE,    kCanvasToolArrow,      0 },
+   { "diamond.xpm",    "Diamond",          kFALSE,    kCanvasToolDiamond,    0 },
+   { "ellipse.xpm",    "Ellipse",          kFALSE,    kCanvasToolEllipse,    0 },
+   { "pad.xpm",        "Pad",              kFALSE,    kCanvasToolPad,        0 },
+   { "pave.xpm",       "Pave",             kFALSE,    kCanvasToolPave,       0 },
+   { "pavelabel.xpm",  "Pave Label",       kFALSE,    kCanvasToolPLabel,     0 },
+   { "pavetext.xpm",   "Pave Text",        kFALSE,    kCanvasToolPText,      0 },
+   { "pavestext.xpm",  "Paves Text",       kFALSE,    kCanvasToolPsText,     0 },
+   { "graph.xpm",      "Graph",            kFALSE,    kCanvasToolGraph,      0 },
+   { "curlyline.xpm",  "Curly Line",       kFALSE,    kCanvasToolCurlyLine,  0 },
+   { "curlyarc.xpm",   "Curly Arc",        kFALSE,    kCanvasToolCurlyArc,   0 },
+   { "latex.xpm",      "Text/Latex",       kFALSE,    kCanvasToolLatex,      0 },
+   { "marker.xpm",     "Marker",           kFALSE,    kCanvasToolMarker,     0 },
+   { "cut.xpm",        "Graphical Cut",    kFALSE,    kCanvasToolCutG,       0 },
    { 0,                0,                  kFALSE,    0,               0 }
 };
 
@@ -338,11 +341,11 @@ void TRootCanvas::CreateCanvas(const char *name)
 
    // Create menus
    fFileSaveMenu = new TGPopupMenu(fClient->GetDefaultRoot());
-   fFileSaveMenu->AddEntry(Form("%s.&ps",  name), kFileSaveAsPS);
-   fFileSaveMenu->AddEntry(Form("%s.&eps", name), kFileSaveAsEPS);
-   fFileSaveMenu->AddEntry(Form("%s.p&df", name), kFileSaveAsPDF);
-   fFileSaveMenu->AddEntry(Form("%s.&tex", name), kFileSaveAsTEX);
-   fFileSaveMenu->AddEntry(Form("%s.&gif", name), kFileSaveAsGIF);
+   fFileSaveMenu->AddEntry(Form("%s.&ps",  name), kCanvasFileSaveAsPS);
+   fFileSaveMenu->AddEntry(Form("%s.&eps", name), kCanvasFileSaveAsEPS);
+   fFileSaveMenu->AddEntry(Form("%s.p&df", name), kCanvasFileSaveAsPDF);
+   fFileSaveMenu->AddEntry(Form("%s.&tex", name), kCanvasFileSaveAsTEX);
+   fFileSaveMenu->AddEntry(Form("%s.&gif", name), kCanvasFileSaveAsGIF);
 
    static Int_t img = 0;
 
@@ -358,113 +361,113 @@ void TRootCanvas::CreateCanvas(const char *name)
       gErrorIgnoreLevel = sav;
    }
    if (img > 0) {
-      fFileSaveMenu->AddEntry(Form("%s.&jpg",name),  kFileSaveAsJPG);
-      fFileSaveMenu->AddEntry(Form("%s.&png",name),  kFileSaveAsPNG);
+      fFileSaveMenu->AddEntry(Form("%s.&jpg",name),  kCanvasFileSaveAsJPG);
+      fFileSaveMenu->AddEntry(Form("%s.&png",name),  kCanvasFileSaveAsPNG);
    }
 
-   fFileSaveMenu->AddEntry(Form("%s.&C",   name), kFileSaveAsC);
-   fFileSaveMenu->AddEntry(Form("%s.&root",name), kFileSaveAsRoot);
+   fFileSaveMenu->AddEntry(Form("%s.&C",   name), kCanvasFileSaveAsC);
+   fFileSaveMenu->AddEntry(Form("%s.&root",name), kCanvasFileSaveAsRoot);
 
    fFileMenu = new TGPopupMenu(fClient->GetDefaultRoot());
-   fFileMenu->AddEntry("&New Canvas",   kFileNewCanvas);
-   fFileMenu->AddEntry("&Open...",      kFileOpen);
-   fFileMenu->AddEntry("&Close Canvas", kFileCloseCanvas);
+   fFileMenu->AddEntry("&New Canvas",   kCanvasFileNewCanvas);
+   fFileMenu->AddEntry("&Open...",      kCanvasFileOpen);
+   fFileMenu->AddEntry("&Close Canvas", kCanvasFileCloseCanvas);
    fFileMenu->AddSeparator();
    fFileMenu->AddPopup("&Save",         fFileSaveMenu);
-   fFileMenu->AddEntry("Save &As...",   kFileSaveAs);
+   fFileMenu->AddEntry("Save &As...",   kCanvasFileSaveAs);
    fFileMenu->AddSeparator();
-   fFileMenu->AddEntry("&Print...",     kFilePrint);
+   fFileMenu->AddEntry("&Print...",     kCanvasFilePrint);
    fFileMenu->AddSeparator();
-   fFileMenu->AddEntry("&Quit ROOT",    kFileQuit);
+   fFileMenu->AddEntry("&Quit ROOT",    kCanvasFileQuit);
 
    fEditClearMenu = new TGPopupMenu(fClient->GetDefaultRoot());
-   fEditClearMenu->AddEntry("&Pad",     kEditClearPad);
-   fEditClearMenu->AddEntry("&Canvas",  kEditClearCanvas);
+   fEditClearMenu->AddEntry("&Pad",     kCanvasEditClearPad);
+   fEditClearMenu->AddEntry("&Canvas",  kCanvasEditClearCanvas);
 
    fEditMenu = new TGPopupMenu(fClient->GetDefaultRoot());
-   fEditMenu->AddEntry("&Style...",     kEditStyle);
+   fEditMenu->AddEntry("&Style...",     kCanvasEditStyle);
    fEditMenu->AddSeparator();
-   fEditMenu->AddEntry("Cu&t",          kEditCut);
-   fEditMenu->AddEntry("&Copy",         kEditCopy);
-   fEditMenu->AddEntry("&Paste",        kEditPaste);
+   fEditMenu->AddEntry("Cu&t",          kCanvasEditCut);
+   fEditMenu->AddEntry("&Copy",         kCanvasEditCopy);
+   fEditMenu->AddEntry("&Paste",        kCanvasEditPaste);
    fEditMenu->AddSeparator();
    fEditMenu->AddPopup("C&lear",        fEditClearMenu);
    fEditMenu->AddSeparator();
-   fEditMenu->AddEntry("&Undo",         kEditUndo);
-   fEditMenu->AddEntry("&Redo",         kEditRedo);
+   fEditMenu->AddEntry("&Undo",         kCanvasEditUndo);
+   fEditMenu->AddEntry("&Redo",         kCanvasEditRedo);
 
-   fEditMenu->DisableEntry(kEditCut);
-   fEditMenu->DisableEntry(kEditCopy);
-   fEditMenu->DisableEntry(kEditPaste);
-   fEditMenu->DisableEntry(kEditUndo);
-   fEditMenu->DisableEntry(kEditRedo);
+   fEditMenu->DisableEntry(kCanvasEditCut);
+   fEditMenu->DisableEntry(kCanvasEditCopy);
+   fEditMenu->DisableEntry(kCanvasEditPaste);
+   fEditMenu->DisableEntry(kCanvasEditUndo);
+   fEditMenu->DisableEntry(kCanvasEditRedo);
 
    fViewWithMenu = new TGPopupMenu(fClient->GetDefaultRoot());
-   fViewWithMenu->AddEntry("&X3D",      kViewX3D);
-   fViewWithMenu->AddEntry("&OpenGL",   kViewOpenGL);
+   fViewWithMenu->AddEntry("&X3D",      kCanvasViewX3D);
+   fViewWithMenu->AddEntry("&OpenGL",   kCanvasViewOpenGL);
 
    fViewMenu = new TGPopupMenu(fClient->GetDefaultRoot());
-   fViewMenu->AddEntry("&Editor",       kViewEditor);
-   fViewMenu->AddEntry("&Toolbar",      kViewToolbar);
-   fViewMenu->AddEntry("Event &Statusbar", kViewEventStatus);
-   fViewMenu->AddEntry("T&oolTip Info", kViewToolTips);
+   fViewMenu->AddEntry("&Editor",       kCanvasViewEditor);
+   fViewMenu->AddEntry("&Toolbar",      kCanvasViewToolbar);
+   fViewMenu->AddEntry("Event &Statusbar", kCanvasViewEventStatus);
+   fViewMenu->AddEntry("T&oolTip Info", kCanvasViewToolTips);
    fViewMenu->AddSeparator();
-   fViewMenu->AddEntry("&Colors",       kViewColors);
-   fViewMenu->AddEntry("&Fonts",        kViewFonts);
-   fViewMenu->AddEntry("&Markers",      kViewMarkers);
+   fViewMenu->AddEntry("&Colors",       kCanvasViewColors);
+   fViewMenu->AddEntry("&Fonts",        kCanvasViewFonts);
+   fViewMenu->AddEntry("&Markers",      kCanvasViewMarkers);
    fViewMenu->AddSeparator();
-   fViewMenu->AddEntry("&Iconify",      kViewIconify);
+   fViewMenu->AddEntry("&Iconify",      kCanvasViewIconify);
    fViewMenu->AddSeparator();
    fViewMenu->AddPopup("&View With",    fViewWithMenu);
 
-   fViewMenu->DisableEntry(kViewFonts);
+   fViewMenu->DisableEntry(kCanvasViewFonts);
 
    fOptionMenu = new TGPopupMenu(fClient->GetDefaultRoot());
-   fOptionMenu->AddEntry("&Auto Resize Canvas",  kOptionAutoResize);
-   fOptionMenu->AddEntry("&Resize Canvas",       kOptionResizeCanvas);
-   fOptionMenu->AddEntry("&Move Opaque",         kOptionMoveOpaque);
-   fOptionMenu->AddEntry("Resize &Opaque",       kOptionResizeOpaque);
+   fOptionMenu->AddEntry("&Auto Resize Canvas",  kCanvasOptionAutoResize);
+   fOptionMenu->AddEntry("&Resize Canvas",       kCanvasOptionResizeCanvas);
+   fOptionMenu->AddEntry("&Move Opaque",         kCanvasOptionMoveOpaque);
+   fOptionMenu->AddEntry("Resize &Opaque",       kCanvasOptionResizeOpaque);
    fOptionMenu->AddSeparator();
-   fOptionMenu->AddEntry("&Interrupt",           kOptionInterrupt);
-   fOptionMenu->AddEntry("R&efresh",             kOptionRefresh);
+   fOptionMenu->AddEntry("&Interrupt",           kCanvasOptionInterrupt);
+   fOptionMenu->AddEntry("R&efresh",             kCanvasOptionRefresh);
    fOptionMenu->AddSeparator();
-   fOptionMenu->AddEntry("&Pad Auto Exec",       kOptionAutoExec);
+   fOptionMenu->AddEntry("&Pad Auto Exec",       kCanvasOptionAutoExec);
    fOptionMenu->AddSeparator();
-   fOptionMenu->AddEntry("&Statistics",          kOptionStatistics);
-   fOptionMenu->AddEntry("Histogram &Title",     kOptionHistTitle);
-   fOptionMenu->AddEntry("&Fit Parameters",      kOptionFitParams);
-   fOptionMenu->AddEntry("Can Edit &Histograms", kOptionCanEdit);
+   fOptionMenu->AddEntry("&Statistics",          kCanvasOptionStatistics);
+   fOptionMenu->AddEntry("Histogram &Title",     kCanvasOptionHistTitle);
+   fOptionMenu->AddEntry("&Fit Parameters",      kCanvasOptionFitParams);
+   fOptionMenu->AddEntry("Can Edit &Histograms", kCanvasOptionCanEdit);
 
    // Opaque options initialized in InitWindow()
-   fOptionMenu->CheckEntry(kOptionAutoResize);
+   fOptionMenu->CheckEntry(kCanvasOptionAutoResize);
    if (gStyle->GetOptStat())
-      fOptionMenu->CheckEntry(kOptionStatistics);
+      fOptionMenu->CheckEntry(kCanvasOptionStatistics);
    if (gStyle->GetOptTitle())
-      fOptionMenu->CheckEntry(kOptionHistTitle);
+      fOptionMenu->CheckEntry(kCanvasOptionHistTitle);
    if (gStyle->GetOptFit())
-      fOptionMenu->CheckEntry(kOptionFitParams);
+      fOptionMenu->CheckEntry(kCanvasOptionFitParams);
    if (gROOT->GetEditHistograms())
-      fOptionMenu->CheckEntry(kOptionCanEdit);
+      fOptionMenu->CheckEntry(kCanvasOptionCanEdit);
 
    fToolsMenu = new TGPopupMenu(fClient->GetDefaultRoot());
-   fToolsMenu->AddEntry("&Inspect ROOT",   kInspectRoot);
-   fToolsMenu->AddEntry("&Class Tree",     kClassesTree);
-   fToolsMenu->AddEntry("&Fit Panel",      kFitPanel);
-   fToolsMenu->AddEntry("&Start Browser",  kToolsBrowser);
-   fToolsMenu->AddEntry("&Gui Builder",    kToolsBuilder);
-   fToolsMenu->AddEntry("&Event Recorder", kToolsRecorder);
+   fToolsMenu->AddEntry("&Inspect ROOT",   kCanvasInspectRoot);
+   fToolsMenu->AddEntry("&Class Tree",     kCanvasClassesTree);
+   fToolsMenu->AddEntry("&Fit Panel",      kCanvasFitPanel);
+   fToolsMenu->AddEntry("&Start Browser",  kCanvasToolsBrowser);
+   fToolsMenu->AddEntry("&Gui Builder",    kCanvasToolsBuilder);
+   fToolsMenu->AddEntry("&Event Recorder", kCanvasToolsRecorder);
 
    fHelpMenu = new TGPopupMenu(fClient->GetDefaultRoot());
    fHelpMenu->AddLabel("Basic Help On...");
    fHelpMenu->AddSeparator();
-   fHelpMenu->AddEntry("&Canvas",          kHelpOnCanvas);
-   fHelpMenu->AddEntry("&Menus",           kHelpOnMenus);
-   fHelpMenu->AddEntry("&Graphics Editor", kHelpOnGraphicsEd);
-   fHelpMenu->AddEntry("&Browser",         kHelpOnBrowser);
-   fHelpMenu->AddEntry("&Objects",         kHelpOnObjects);
-   fHelpMenu->AddEntry("&PostScript",      kHelpOnPS);
+   fHelpMenu->AddEntry("&Canvas",          kCanvasHelpOnCanvas);
+   fHelpMenu->AddEntry("&Menus",           kCanvasHelpOnMenus);
+   fHelpMenu->AddEntry("&Graphics Editor", kCanvasHelpOnGraphicsEd);
+   fHelpMenu->AddEntry("&Browser",         kCanvasHelpOnBrowser);
+   fHelpMenu->AddEntry("&Objects",         kCanvasHelpOnObjects);
+   fHelpMenu->AddEntry("&PostScript",      kCanvasHelpOnPS);
    fHelpMenu->AddSeparator();
-   fHelpMenu->AddEntry("&About ROOT...",   kHelpAbout);
+   fHelpMenu->AddEntry("&About ROOT...",   kCanvasHelpAbout);
 
    // This main frame will process the menu commands
    fFileMenu->Associate(this);
@@ -774,67 +777,67 @@ Bool_t TRootCanvas::ProcessMessage(Longptr_t msg, Longptr_t parm1, Longptr_t)
 
                switch (parm1) {
                   // Handle toolbar items...
-                  case kToolModify:
+				   case kCanvasToolModify:
                      gROOT->SetEditorMode();
                      break;
-                  case kToolArc:
+				   case kCanvasToolArc:
                      gROOT->SetEditorMode("Arc");
                      break;
-                  case kToolLine:
+				   case kCanvasToolLine:
                      gROOT->SetEditorMode("Line");
                      break;
-                  case kToolArrow:
+				   case kCanvasToolArrow:
                      gROOT->SetEditorMode("Arrow");
                      break;
-                  case kToolDiamond:
+				   case kCanvasToolDiamond:
                      gROOT->SetEditorMode("Diamond");
                      break;
-                  case kToolEllipse:
+				   case kCanvasToolEllipse:
                      gROOT->SetEditorMode("Ellipse");
                      break;
-                  case kToolPad:
+				   case kCanvasToolPad:
                      gROOT->SetEditorMode("Pad");
                      break;
-                  case kToolPave:
+				   case kCanvasToolPave:
                      gROOT->SetEditorMode("Pave");
                      break;
-                  case kToolPLabel:
+				   case kCanvasToolPLabel:
                      gROOT->SetEditorMode("PaveLabel");
                      break;
-                  case kToolPText:
+				   case kCanvasToolPText:
                      gROOT->SetEditorMode("PaveText");
                      break;
-                  case kToolPsText:
+				   case kCanvasToolPsText:
                      gROOT->SetEditorMode("PavesText");
                      break;
-                  case kToolGraph:
+				   case kCanvasToolGraph:
                      gROOT->SetEditorMode("PolyLine");
                      break;
-                  case kToolCurlyLine:
+				   case kCanvasToolCurlyLine:
                      gROOT->SetEditorMode("CurlyLine");
                      break;
-                  case kToolCurlyArc:
+				   case kCanvasToolCurlyArc:
                      gROOT->SetEditorMode("CurlyArc");
                      break;
-                  case kToolLatex:
+				   case kCanvasToolLatex:
                      gROOT->SetEditorMode("Text");
                      break;
-                  case kToolMarker:
+				   case kCanvasToolMarker:
                      gROOT->SetEditorMode("Marker");
                      break;
-                  case kToolCutG:
+				   case kCanvasToolCutG:
                      gROOT->SetEditorMode("CutG");
                      break;
 
                   // Handle File menu items...
-                  case kFileNewCanvas:
+				   case kCanvasFileNewCanvas:
                      gROOT->MakeDefCanvas();
                      break;
-                  case kFileOpen:
+				   case kCanvasFileOpen:
                      {
                         static TString dir(".");
                         TGFileInfo fi;
-                        fi.fFileTypes = gOpenTypes;
+				         fi.fFileTypes = gCanvasOpenTypes;
                         fi.SetIniDir(dir);
                         new TGFileDialog(fClient->GetDefaultRoot(), this, kFDOpen,&fi);
                         if (!fi.fFilename) return kTRUE;
@@ -853,7 +856,7 @@ Bool_t TRootCanvas::ProcessMessage(Longptr_t msg, Longptr_t parm1, Longptr_t)
                         gROOT->RefreshBrowsers();
                      }
                      break;
-                  case kFileSaveAs:
+				   case kCanvasFileSaveAs:
                      {
                         TString workdir = gSystem->WorkingDirectory();
                         static TString dir(".");
@@ -920,40 +923,40 @@ again:
                         }
                      }
                      break;
-                  case kFileSaveAsRoot:
+				   case kCanvasFileSaveAsRoot:
                      fCanvas->SaveAs(".root");
                      break;
-                  case kFileSaveAsC:
+				   case kCanvasFileSaveAsC:
                      fCanvas->SaveSource();
                      break;
-                  case kFileSaveAsPS:
+				   case kCanvasFileSaveAsPS:
                      fCanvas->SaveAs();
                      break;
-                  case kFileSaveAsEPS:
+				   case kCanvasFileSaveAsEPS:
                      fCanvas->SaveAs(".eps");
                      break;
-                  case kFileSaveAsPDF:
+				   case kCanvasFileSaveAsPDF:
                      fCanvas->SaveAs(".pdf");
                      break;
-                  case kFileSaveAsGIF:
+				   case kCanvasFileSaveAsGIF:
                      fCanvas->SaveAs(".gif");
                      break;
-                  case kFileSaveAsJPG:
+				   case kCanvasFileSaveAsJPG:
                      fCanvas->SaveAs(".jpg");
                      break;
-                  case kFileSaveAsPNG:
+				   case kCanvasFileSaveAsPNG:
                      fCanvas->SaveAs(".png");
                      break;
-                  case kFileSaveAsTEX:
+				   case kCanvasFileSaveAsTEX:
                      fCanvas->SaveAs(".tex");
                      break;
-                  case kFilePrint:
+				   case kCanvasFilePrint:
                      PrintCanvas();
                      break;
-                  case kFileCloseCanvas:
+				   case kCanvasFileCloseCanvas:
                      SendCloseMessage();
                      break;
-                  case kFileQuit:
+				   case kCanvasFileQuit:
                      if (!gApplication->ReturnFromRun()) {
                         if ((TVirtualPadEditor::GetPadEditor(kFALSE) != 0))
                            TVirtualPadEditor::Terminate();
@@ -967,51 +970,51 @@ again:
                      break;
 
                   // Handle Edit menu items...
-                  case kEditStyle:
+				   case kCanvasEditStyle:
                      if (!TClass::GetClass("TStyleManager"))
                         gSystem->Load("libGed");
                      gROOT->ProcessLine("TStyleManager::Show()");
                      break;
-                  case kEditCut:
+				   case kCanvasEditCut:
                      // still noop
                      break;
-                  case kEditCopy:
+				   case kCanvasEditCopy:
                      // still noop
                      break;
-                  case kEditPaste:
+				   case kCanvasEditPaste:
                      // still noop
                      break;
-                  case kEditUndo:
+				   case kCanvasEditUndo:
                      // noop
                      break;
-                  case kEditRedo:
+                  case kCanvasEditRedo:
                      // noop
                      break;
-                  case kEditClearPad:
+                  case kCanvasEditClearPad:
                      gPad->Clear();
                      gPad->Modified();
                      gPad->Update();
                      break;
-                  case kEditClearCanvas:
+                  case kCanvasEditClearCanvas:
                      fCanvas->Clear();
                      fCanvas->Modified();
                      fCanvas->Update();
                      break;
 
                   // Handle View menu items...
-                  case kViewEditor:
+                  case kCanvasViewEditor:
                      fCanvas->ToggleEditor();
                      break;
-                  case kViewToolbar:
+                  case kCanvasViewToolbar:
                      fCanvas->ToggleToolBar();
                      break;
-                  case kViewEventStatus:
+                  case kCanvasViewEventStatus:
                      fCanvas->ToggleEventStatus();
                      break;
-                  case kViewToolTips:
+                  case kCanvasViewToolTips:
                      fCanvas->ToggleToolTips();
                      break;
-                  case kViewColors:
+                  case kCanvasViewColors:
                      {
                         TVirtualPad *padsav = gPad->GetCanvas();
                         //This was the code with the old color table
@@ -1029,10 +1032,10 @@ again:
                         if (padsav) padsav->cd();
                      }
                      break;
-                  case kViewFonts:
+                  case kCanvasViewFonts:
                      // noop
                      break;
-                  case kViewMarkers:
+                  case kCanvasViewMarkers:
                      {
                         TVirtualPad *padsav = gPad ? gPad->GetCanvas() : nullptr;
                         TCanvas *m = new TCanvas("markers","Marker Types",600,200);
@@ -1041,35 +1044,35 @@ again:
                         if (padsav) padsav->cd();
                      }
                      break;
-                  case kViewIconify:
+                  case kCanvasViewIconify:
                      Iconify();
                      break;
-                  case kViewX3D:
+                  case kCanvasViewX3D:
                      gPad->GetViewer3D("x3d");
                      break;
-                  case kViewOpenGL:
+                  case kCanvasViewOpenGL:
                      gPad->GetViewer3D("ogl");
                      break;
 
                   // Handle Option menu items...
-                  case kOptionAutoExec:
+                  case kCanvasOptionAutoExec:
                      fCanvas->ToggleAutoExec();
                      if (fCanvas->GetAutoExec()) {
-                        fOptionMenu->CheckEntry(kOptionAutoExec);
+                        fOptionMenu->CheckEntry(kCanvasOptionAutoExec);
                      } else {
-                        fOptionMenu->UnCheckEntry(kOptionAutoExec);
+                        fOptionMenu->UnCheckEntry(kCanvasOptionAutoExec);
                      }
                      break;
-                  case kOptionAutoResize:
+                  case kCanvasOptionAutoResize:
                      {
                         fAutoFit = fAutoFit ? kFALSE : kTRUE;
                         int opt = fCanvasContainer->GetOptions();
                         if (fAutoFit) {
                            opt &= ~kFixedSize;
-                           fOptionMenu->CheckEntry(kOptionAutoResize);
+                           fOptionMenu->CheckEntry(kCanvasOptionAutoResize);
                         } else {
                            opt |= kFixedSize;
-                           fOptionMenu->UnCheckEntry(kOptionAutoResize);
+                           fOptionMenu->UnCheckEntry(kCanvasOptionAutoResize);
                         }
                         fCanvasContainer->ChangeOptions(opt);
                         // in case of autofit this will generate a configure
@@ -1079,97 +1082,97 @@ again:
                      }
                      Layout();
                      break;
-                  case kOptionResizeCanvas:
+                  case kCanvasOptionResizeCanvas:
                      FitCanvas();
                      break;
-                  case kOptionMoveOpaque:
+                  case kCanvasOptionMoveOpaque:
                      if (fCanvas->OpaqueMoving()) {
                         fCanvas->MoveOpaque(0);
-                        fOptionMenu->UnCheckEntry(kOptionMoveOpaque);
+                         fOptionMenu->UnCheckEntry(kCanvasOptionMoveOpaque);
                      } else {
                         fCanvas->MoveOpaque(1);
-                        fOptionMenu->CheckEntry(kOptionMoveOpaque);
+                         fOptionMenu->CheckEntry(kCanvasOptionMoveOpaque);
                      }
                      break;
-                  case kOptionResizeOpaque:
+                  case kCanvasOptionResizeOpaque:
                      if (fCanvas->OpaqueResizing()) {
                         fCanvas->ResizeOpaque(0);
-                        fOptionMenu->UnCheckEntry(kOptionResizeOpaque);
+                         fOptionMenu->UnCheckEntry(kCanvasOptionResizeOpaque);
                      } else {
                         fCanvas->ResizeOpaque(1);
-                        fOptionMenu->CheckEntry(kOptionResizeOpaque);
+                        fOptionMenu->CheckEntry(kCanvasOptionResizeOpaque);
                      }
                      break;
-                  case kOptionInterrupt:
+                  case kCanvasOptionInterrupt:
                      gROOT->SetInterrupt();
                      break;
-                  case kOptionRefresh:
+                  case kCanvasOptionRefresh:
                      fCanvas->Paint();
                      fCanvas->Update();
                      break;
-                  case kOptionStatistics:
+                  case kCanvasOptionStatistics:
                      if (gStyle->GetOptStat()) {
                         gStyle->SetOptStat(0);
                         delete gPad->FindObject("stats");
-                        fOptionMenu->UnCheckEntry(kOptionStatistics);
+                         fOptionMenu->UnCheckEntry(kCanvasOptionStatistics);
                      } else {
                         gStyle->SetOptStat(1);
-                        fOptionMenu->CheckEntry(kOptionStatistics);
+                         fOptionMenu->CheckEntry(kCanvasOptionStatistics);
                      }
                      gPad->Modified();
                      fCanvas->Update();
                      break;
-                  case kOptionHistTitle:
+                  case kCanvasOptionHistTitle:
                      if (gStyle->GetOptTitle()) {
                         gStyle->SetOptTitle(0);
                         delete gPad->FindObject("title");
-                        fOptionMenu->UnCheckEntry(kOptionHistTitle);
+                         fOptionMenu->UnCheckEntry(kCanvasOptionHistTitle);
                      } else {
                         gStyle->SetOptTitle(1);
-                        fOptionMenu->CheckEntry(kOptionHistTitle);
+                         fOptionMenu->CheckEntry(kCanvasOptionHistTitle);
                      }
                      gPad->Modified();
                      fCanvas->Update();
                      break;
-                  case kOptionFitParams:
+                  case kCanvasOptionFitParams:
                      if (gStyle->GetOptFit()) {
                         gStyle->SetOptFit(0);
-                        fOptionMenu->UnCheckEntry(kOptionFitParams);
+                         fOptionMenu->UnCheckEntry(kCanvasOptionFitParams);
                      } else {
                         gStyle->SetOptFit(1);
-                        fOptionMenu->CheckEntry(kOptionFitParams);
+                         fOptionMenu->CheckEntry(kCanvasOptionFitParams);
                      }
                      gPad->Modified();
                      fCanvas->Update();
                      break;
-                  case kOptionCanEdit:
+                  case kCanvasOptionCanEdit:
                      if (gROOT->GetEditHistograms()) {
                         gROOT->SetEditHistograms(kFALSE);
-                        fOptionMenu->UnCheckEntry(kOptionCanEdit);
+                         fOptionMenu->UnCheckEntry(kCanvasOptionCanEdit);
                      } else {
                         gROOT->SetEditHistograms(kTRUE);
-                        fOptionMenu->CheckEntry(kOptionCanEdit);
+                         fOptionMenu->CheckEntry(kCanvasOptionCanEdit);
                      }
                      break;
 
                   // Handle Tools menu items...
-                  case kInspectRoot:
+                  case kCanvasInspectRoot:
                      fCanvas->cd();
                      gROOT->Inspect();
                      fCanvas->Update();
                      break;
-                  case kToolsBrowser:
+                  case kCanvasToolsBrowser:
                      new TBrowser("browser");
                      break;
-                  case kToolsBuilder:
+                  case kCanvasToolsBuilder:
                      TGuiBuilder::Instance();
                      break;
-                  case kToolsRecorder:
+                  case kCanvasToolsRecorder:
                      gROOT->ProcessLine("new TGRecorder()");
                      break;
 
                   // Handle Tools menu items...
-                  case kClassesTree:
+                  case kCanvasClassesTree:
                      {
                         TString cdef;
                         lc = (TList*)gROOT->GetListOfCanvases();
@@ -1183,7 +1186,7 @@ again:
                      }
                      break;
 
-               case kFitPanel:
+                case kCanvasFitPanel:
                      {
                         // use plugin manager to create instance of TFitEditor
                         TPluginHandler *handler = gROOT->GetPluginManager()->FindHandler("TFitEditor");
@@ -1197,7 +1200,7 @@ again:
                      break;
 
                   // Handle Help menu items...
-                  case kHelpAbout:
+                  case kCanvasHelpAbout:
                      {
 #ifdef WIN32
                         new TWin32SplashThread(kTRUE);
@@ -1211,32 +1214,32 @@ again:
 #endif
                      }
                      break;
-                  case kHelpOnCanvas:
+                  case kCanvasHelpOnCanvas:
                      hd = new TRootHelpDialog(this, "Help on Canvas...", 600, 400);
                      hd->SetText(gHelpCanvas);
                      hd->Popup();
                      break;
-                  case kHelpOnMenus:
+                  case kCanvasHelpOnMenus:
                      hd = new TRootHelpDialog(this, "Help on Menus...", 600, 400);
                      hd->SetText(gHelpPullDownMenus);
                      hd->Popup();
                      break;
-                  case kHelpOnGraphicsEd:
+                  case kCanvasHelpOnGraphicsEd:
                      hd = new TRootHelpDialog(this, "Help on Graphics Editor...", 600, 400);
                      hd->SetText(gHelpGraphicsEditor);
                      hd->Popup();
                      break;
-                  case kHelpOnBrowser:
+                  case kCanvasHelpOnBrowser:
                      hd = new TRootHelpDialog(this, "Help on Browser...", 600, 400);
                      hd->SetText(gHelpBrowser);
                      hd->Popup();
                      break;
-                  case kHelpOnObjects:
+                  case kCanvasHelpOnObjects:
                      hd = new TRootHelpDialog(this, "Help on Objects...", 600, 400);
                      hd->SetText(gHelpObjects);
                      hd->Popup();
                      break;
-                  case kHelpOnPS:
+                  case kCanvasHelpOnPS:
                      hd = new TRootHelpDialog(this, "Help on PostScript...", 600, 400);
                      hd->SetText(gHelpPostscript);
                      hd->Popup();
@@ -1257,9 +1260,9 @@ again:
 Int_t TRootCanvas::InitWindow()
 {
    if (fCanvas->OpaqueMoving())
-      fOptionMenu->CheckEntry(kOptionMoveOpaque);
+      fOptionMenu->CheckEntry(kCanvasOptionMoveOpaque);
    if (fCanvas->OpaqueResizing())
-      fOptionMenu->CheckEntry(kOptionResizeOpaque);
+      fOptionMenu->CheckEntry(kCanvasOptionResizeOpaque);
 
    return fCanvasID;
 }
@@ -1274,11 +1277,11 @@ void TRootCanvas::SetCanvasSize(UInt_t w, UInt_t h)
    int opt = fCanvasContainer->GetOptions();
    if (!w && !h) {
       fAutoFit = kTRUE;
-      fOptionMenu->CheckEntry(kOptionAutoResize);
+      fOptionMenu->CheckEntry(kCanvasOptionAutoResize);
       opt &= ~kFixedSize;    // turn off fixed size mode
    } else {
       fAutoFit = kFALSE;
-      fOptionMenu->UnCheckEntry(kOptionAutoResize);
+      fOptionMenu->UnCheckEntry(kCanvasOptionAutoResize);
       opt |= kFixedSize;    // turn on fixed size mode
    }
    fCanvasContainer->ChangeOptions(opt);
@@ -1462,12 +1465,12 @@ void TRootCanvas::ShowStatusBar(Bool_t show)
 
    if (show) {
       ShowFrame(fStatusBar);
-      fViewMenu->CheckEntry(kViewEventStatus);
+      fViewMenu->CheckEntry(kCanvasViewEventStatus);
       if (dh - ch >= sh) h = h + sh;
       else h = ch;
    } else {
       HideFrame(fStatusBar);
-      fViewMenu->UnCheckEntry(kViewEventStatus);
+      fViewMenu->UnCheckEntry(kCanvasViewEventStatus);
       if (dh - ch < sh) h = ch;
       else h = h - sh;
    }
@@ -1494,23 +1497,23 @@ void TRootCanvas::ShowEditor(Bool_t show)
          if (gged && gged->GetCanvas() == fCanvas) {
             gged->Hide();
          }
-         if (!fViewMenu->IsEntryChecked(kViewToolbar) || fToolDock->IsUndocked()) {
+         if (!fViewMenu->IsEntryChecked(kCanvasViewToolbar) || fToolDock->IsUndocked()) {
             ShowFrame(fHorizontal1);
             h += s;
          }
          fMainFrame->ShowFrame(fEditorFrame);
          fEditor->Show();
-         fViewMenu->CheckEntry(kViewEditor);
+         fViewMenu->CheckEntry(kCanvasViewEditor);
          w += e;
       } else {
-         if (!fViewMenu->IsEntryChecked(kViewToolbar) || fToolDock->IsUndocked()) {
+         if (!fViewMenu->IsEntryChecked(kCanvasViewToolbar) || fToolDock->IsUndocked()) {
             HideFrame(fHorizontal1);
             h -= s;
          }
          if (fEditor)
             fEditor->Hide();
          fMainFrame->HideFrame(fEditorFrame);
-         fViewMenu->UnCheckEntry(kViewEditor);
+         fViewMenu->UnCheckEntry(kCanvasViewEditor);
          w -= e;
       }
    };
@@ -1591,12 +1594,12 @@ void TRootCanvas::ShowToolBar(Bool_t show)
       fToolDock->AddFrame(fToolBar, fHorizontal1Layout);
 
       Int_t spacing = 6, i;
-      for (i = 0; gToolBarData[i].fPixmap; i++) {
-         if (strlen(gToolBarData[i].fPixmap) == 0) {
+      for (i = 0; gCanvasToolBarData[i].fPixmap; i++) {
+         if (strlen(gCanvasToolBarData[i].fPixmap) == 0) {
             spacing = 6;
             continue;
          }
-         fToolBar->AddButton(this, &gToolBarData[i], spacing);
+         fToolBar->AddButton(this, &gCanvasToolBarData[i], spacing);
          spacing = 0;
       }
       fVertical1 = new TGVertical3DLine(fToolBar);
@@ -1630,12 +1633,12 @@ void TRootCanvas::ShowToolBar(Bool_t show)
 
    if (show) {
       ShowFrame(fToolDock);
-      if (!fViewMenu->IsEntryChecked(kViewEditor)) {
+      if (!fViewMenu->IsEntryChecked(kCanvasViewEditor)) {
          ShowFrame(fHorizontal1);
          h = h + sh;
       }
       ShowFrame(fToolBarSep);
-      fViewMenu->CheckEntry(kViewToolbar);
+      fViewMenu->CheckEntry(kCanvasViewToolbar);
       h = h + dh + sh;
    } else {
       if (fToolDock->IsUndocked()) {
@@ -1644,13 +1647,13 @@ void TRootCanvas::ShowToolBar(Bool_t show)
       } else h = h - dh;
 
       HideFrame(fToolDock);
-      if (!fViewMenu->IsEntryChecked(kViewEditor)) {
+      if (!fViewMenu->IsEntryChecked(kCanvasViewEditor)) {
          HideFrame(fHorizontal1);
          h = h - sh;
       }
       HideFrame(fToolBarSep);
       h = h - sh;
-      fViewMenu->UnCheckEntry(kViewToolbar);
+      fViewMenu->UnCheckEntry(kCanvasViewToolbar);
    }
    Resize(GetWidth(), h);
 }
@@ -1661,9 +1664,9 @@ void TRootCanvas::ShowToolBar(Bool_t show)
 void TRootCanvas::ShowToolTips(Bool_t show)
 {
    if (show)
-      fViewMenu->CheckEntry(kViewToolTips);
+      fViewMenu->CheckEntry(kCanvasViewToolTips);
    else
-      fViewMenu->UnCheckEntry(kViewToolTips);
+      fViewMenu->UnCheckEntry(kCanvasViewToolTips);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1671,7 +1674,7 @@ void TRootCanvas::ShowToolTips(Bool_t show)
 
 Bool_t TRootCanvas::HasEditor() const
 {
-   return (fEditor) && fViewMenu->IsEntryChecked(kViewEditor);
+    return (fEditor) && fViewMenu->IsEntryChecked(kCanvasViewEditor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1716,14 +1719,14 @@ void TRootCanvas::AdjustSize()
    UInt_t sh = fHorizontal1->GetHeight();
 
    if (fToolDock->IsUndocked()) {
-      if (!fViewMenu->IsEntryChecked(kViewEditor)) {
+      if (!fViewMenu->IsEntryChecked(kCanvasViewEditor)) {
          HideFrame(fHorizontal1);
          h = h - sh;
       }
       HideFrame(fToolBarSep);
       h = h - dh - sh;
    } else {
-      if (!fViewMenu->IsEntryChecked(kViewEditor)) {
+      if (!fViewMenu->IsEntryChecked(kCanvasViewEditor)) {
          ShowFrame(fHorizontal1);
          h = h + sh;
       }

@@ -31,6 +31,9 @@ ROOT_LINKER_LIBRARY(GenVector
     MathCore
 )
 
+# Unity builds merge sources that define identical TU-local enums/helpers.
+set_target_properties(GenVector PROPERTIES UNITY_BUILD OFF)
+
 ROOT_GENERATE_DICTIONARY(G__GenVector
     Math/AxisAngle.h
     Math/Boost.h

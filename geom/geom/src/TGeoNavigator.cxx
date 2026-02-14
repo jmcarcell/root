@@ -45,7 +45,7 @@ gGeoManager->SetCurrentNavigator(0);
 
 static Double_t gTolerance = TGeoShape::Tolerance();
 const char *kGeoOutsidePath = " ";
-const Int_t kN3 = 3 * sizeof(Double_t);
+const Int_t kD3 = 3 * sizeof(Double_t);
 
 Bool_t TGeoNavigator::fgUsePWSafetyCaching = kFALSE;
 
@@ -652,7 +652,7 @@ TGeoNode *TGeoNavigator::FindNextBoundary(Double_t stepmax, const char *path, Bo
          return fCurrentNode;
       }
       fSafety = TMath::Abs(fSafety);
-      memcpy(fLastPoint, fPoint, kN3);
+      memcpy(fLastPoint, fPoint, kD3);
       fLastSafety = fSafety;
       if (fSafety < gTolerance)
          fIsOnBoundary = kTRUE;
@@ -1200,7 +1200,7 @@ TGeoNode *TGeoNavigator::FindNextBoundaryAndStep(Double_t stepmax, Bool_t compsa
       }
       Safety();
       fLastSafety = fSafety;
-      memcpy(fLastPoint, fPoint, kN3);
+      memcpy(fLastPoint, fPoint, kD3);
       // If proposed step less than safety, nothing to check
       if (fSafety > stepmax + gTolerance) {
          fPoint[0] += stepmax * fDirection[0];
@@ -2468,10 +2468,10 @@ Bool_t TGeoNavigator::IsSameLocation(Double_t x, Double_t y, Double_t z, Bool_t 
       Int_t cid = GetCurrentNodeId();
       if (!change)
          PushPoint();
-      memcpy(oldpt, fPoint, kN3);
+      memcpy(oldpt, fPoint, kD3);
       SetCurrentPoint(x, y, z);
       SearchNode();
-      memcpy(fPoint, oldpt, kN3);
+      memcpy(fPoint, oldpt, kD3);
       Bool_t same = (cid == GetCurrentNodeId()) ? kTRUE : kFALSE;
       if (!change)
          PopPoint();
@@ -2483,7 +2483,7 @@ Bool_t TGeoNavigator::IsSameLocation(Double_t x, Double_t y, Double_t z, Bool_t 
    point[1] = y;
    point[2] = z;
    if (change)
-      memcpy(fPoint, point, kN3);
+      memcpy(fPoint, point, kD3);
    TGeoVolume *vol = fCurrentNode->GetVolume();
    if (fIsOutside) {
       if (vol->GetShape()->Contains(point)) {

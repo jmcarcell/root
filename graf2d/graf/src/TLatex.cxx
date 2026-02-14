@@ -19,7 +19,7 @@
 #include "TVirtualX.h"
 #include "snprintf.h"
 
-const Double_t kPI = TMath::Pi();
+constexpr Double_t kPITLatex = TMath::Pi();
 
 
 /** \class TLatex
@@ -509,8 +509,8 @@ void TLatex::Rotate(TVirtualPad *pad, Double_t angle, Int_t np, Double_t *x, Dou
    Double_t xOrigin, yOrigin;
    pad->XYtoAbsPixel(fX, fY, xOrigin, yOrigin);
 
-   Double_t cos_angle = TMath::Cos(kPI*angle/180.);
-   Double_t sin_angle = TMath::Sin(kPI*angle/180.);
+   Double_t cos_angle = TMath::Cos(kPITLatex*angle/180.);
+   Double_t sin_angle = TMath::Sin(kPITLatex*angle/180.);
    Double_t xx, yy;
    for (Int_t n = 0; n < np; ++n) {
       pad->AbsPixeltoXY( cos_angle * (x[n]-xOrigin) + sin_angle * (y[n]-yOrigin) + xOrigin,
@@ -1554,12 +1554,12 @@ TLatex::TLatexFormSize TLatex::Analyse(Double_t x, Double_t y, const TextSpec_t 
          Savefs(&fs1);
          radius2 = fs1.Height() ;
          radius1 = radius2  * 2 / 3;
-         dw = radius1*(1 - TMath::Cos(kPI*angle/180)) ;
+         dw = radius1*(1 - TMath::Cos(kPITLatex*angle/180)) ;
       } else {
          fs1 = Readfs();
          radius2 = fs1.Height();
          radius1 = radius2  * 2 / 3;
-         dw = radius1*(1 - TMath::Cos(kPI*angle/180)) ;
+         dw = radius1*(1 - TMath::Cos(kPITLatex*angle/180)) ;
          Double_t x1 = x+l2+radius1 ;
          Double_t x2 = x+5*l2+2*dw+fs1.Width()-radius1 ;
          Double_t y1 = y - (fs1.Over() - fs1.Under())/2. ;
@@ -2071,7 +2071,7 @@ void TLatex::DrawCircle(Double_t x1, Double_t y1, Double_t r, const TextSpec_t &
       r = 1;
 
    const Int_t np = 40;
-   Double_t dphi = 2*kPI/np;
+   Double_t dphi = 2*kPITLatex/np;
    Double_t x[np+3], y[np+3];
 
    SetLineColor(spec.fColor);
@@ -2101,14 +2101,14 @@ void TLatex::DrawParenthesis(Double_t x1, Double_t y1, Double_t r1, Double_t r2,
       r2 = 1;
 
    const Int_t np = 40;
-   Double_t dphi = (phimax-phimin)*kPI/(180*np);
+   Double_t dphi = (phimax-phimin)*kPITLatex/(180*np);
    Double_t x[np+3], y[np+3];
 
    SetLineColor(spec.fColor);
    TAttLine::Modify();  //Change line attributes only if necessary
 
    for (Int_t i = 0; i <= np; i++) {
-      Double_t angle = phimin*kPI/180 + i*dphi;
+      Double_t angle = phimin*kPITLatex/180 + i*dphi;
       x[i] = x1 + r1*TMath::Cos(angle);
       y[i] = y1 + r2*TMath::Sin(angle);
    }

@@ -37,6 +37,12 @@ ROOT_OBJECT_LIBRARY(MetaCling
   TClingValue.cxx
 )
 
+# Unity builds merge many translation units into one; in MetaCling several files
+# rely on TU-local using-directives / helper names that would otherwise not
+# leak across files, causing ambiguous references (e.g. llvm::indent vs our
+# indent(), clang::Type vs llvm::Type, Error() vs llvm::Error).
+set_target_properties(MetaCling PROPERTIES UNITY_BUILD OFF)
+
 # This directory contains files that include llvm, which can give warnings.
 if(NOT MSVC)
   target_compile_options(MetaCling PRIVATE -Wno-error)

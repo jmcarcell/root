@@ -80,14 +80,14 @@ TClingClassInfo::TClingClassInfo(cling::Interpreter *interp, Bool_t all)
 
 TClingClassInfo::TClingClassInfo(cling::Interpreter *interp, const char *name, bool intantiateTemplate /* = true */)
    : TClingDeclInfo(nullptr), fInterp(interp), fFirstTime(true), fDescend(false), fIterAll(kTRUE), fIsIter(false),
-     fOffsetCache(0)
+      fOffsetCache(0)
 {
    const cling::LookupHelper& lh = fInterp->getLookupHelper();
-   const Type *type = nullptr;
+   const clang::Type *type = nullptr;
    const Decl *decl = lh.findScope(name,
-                                   gDebug > 5 ? cling::LookupHelper::WithDiagnostics
-                                   : cling::LookupHelper::NoDiagnostics,
-                                   &type, intantiateTemplate);
+                                    gDebug > 5 ? cling::LookupHelper::WithDiagnostics
+                                    : cling::LookupHelper::NoDiagnostics,
+                                    &type, intantiateTemplate);
    if (!decl) {
       std::string buf = TClassEdit::InsertStd(name);
       if (buf != name) {
@@ -106,16 +106,16 @@ TClingClassInfo::TClingClassInfo(cling::Interpreter *interp, const char *name, b
    SetDecl(decl);
    fType = type;
    if (decl && decl->isInvalidDecl()) {
-      Error("TClingClassInfo", "Found an invalid decl for %s.",name);
+      ::Error("TClingClassInfo", "Found an invalid decl for %s.",name);
       SetDecl(nullptr);
       fType = nullptr;
    }
 }
 
 TClingClassInfo::TClingClassInfo(cling::Interpreter *interp,
-                                 const Type &tag)
+                                 const clang::Type &tag)
    : TClingDeclInfo(nullptr), fInterp(interp), fFirstTime(true), fDescend(false), fIterAll(kTRUE),
-     fIsIter(false), fOffsetCache(0)
+      fIsIter(false), fOffsetCache(0)
 {
    Init(tag);
 }
@@ -206,11 +206,11 @@ void TClingClassInfo::Delete(void *arena, const ROOT::TMetaUtils::TNormalizedCtx
    // Invoke operator delete on a pointer to an object
    // of this class type.
    if (!IsValid()) {
-      Error("TClingClassInfo::Delete()", "Called while invalid!");
+      ::Error("TClingClassInfo::Delete()", "Called while invalid!");
       return;
    }
    if (!IsLoaded()) {
-      Error("TClingClassInfo::Delete()", "Class is not loaded: %s",
+      ::Error("TClingClassInfo::Delete()", "Class is not loaded: %s",
             FullyQualifiedName(GetDecl()).c_str());
       return;
    }
@@ -231,7 +231,7 @@ void TClingClassInfo::DeleteArray(void *arena, bool dtorOnly, const ROOT::TMetaU
       // Unfortunately we do not know how many elements to delete.
       //TClingCallFunc cf(fInterp);
       //cf.ExecDestructor(this, arena, nary, /*withFree=*/false);
-      Error("DeleteArray", "Placement delete of an array is unsupported!\n");
+      ::Error("DeleteArray", "Placement delete of an array is unsupported!\n");
       return;
    }
    TClingCallFunc cf(fInterp);
@@ -384,7 +384,7 @@ TClingMethodInfo TClingClassInfo::GetMethod(const char *fname,
                                  : cling::LookupHelper::NoDiagnostics,
                                  objectIsConst);
    } else {
-      Error("TClingClassInfo::GetMethod",
+      ::Error("TClingClassInfo::GetMethod",
             "The MatchMode %d is not supported.", mode);
       TClingMethodInfo tmi(fInterp);
       return tmi;
@@ -477,7 +477,7 @@ TClingMethodInfo TClingClassInfo::GetMethod(const char *fname,
                                  : cling::LookupHelper::NoDiagnostics,
                                  objectIsConst);
    } else {
-      Error("TClingClassInfo::GetMethod",
+      ::Error("TClingClassInfo::GetMethod",
             "The MatchMode %d is not supported.", mode);
       TClingMethodInfo tmi(fInterp);
       return tmi;
@@ -628,7 +628,7 @@ ptrdiff_t TClingClassInfo::GetBaseOffset(TClingClassInfo* base, void* address, b
                return (*executableFunc)(address, isDerivedObject);
             }
             else {
-               Error("TClingBaseClassInfo::Offset", "The address of the object for virtual base offset calculation is not valid.");
+               ::Error("TClingBaseClassInfo::Offset", "The address of the object for virtual base offset calculation is not valid.");
                return -1;
             }
          }
@@ -769,7 +769,7 @@ void TClingClassInfo::Init(int tagnum)
    return;
 }
 
-void TClingClassInfo::Init(const Type &tag)
+void TClingClassInfo::Init(const clang::Type &tag)
 {
    fType = &tag;
 
@@ -786,9 +786,9 @@ void TClingClassInfo::Init(const Type &tag)
       QualType qType(fType,0);
       static PrintingPolicy printPol(fInterp->getCI()->getLangOpts());
       printPol.SuppressScope = false;
-      Error("TClingClassInfo::Init(const Type&)",
-            "The given type %s does not point to a Decl",
-            qType.getAsString(printPol).c_str());
+      ::Error("TClingClassInfo::Init(const clang::Type&)",
+             "The given type %s does not point to a Decl",
+             qType.getAsString(printPol).c_str());
    }
 }
 
@@ -958,11 +958,11 @@ int TClingClassInfo::InternalNext()
             llvm::raw_string_ostream stream(buf);
             ND->getNameForDiagnostic(stream, Policy, /*Qualified=*/false);
          }
-         Error("TClingClassInfo::InternalNext",
-               "Next called but iteration not prepared for %s!", buf.c_str());
+         ::Error("TClingClassInfo::InternalNext",
+                "Next called but iteration not prepared for %s!", buf.c_str());
       } else {
-         Error("TClingClassInfo::InternalNext",
-               "Next called but iteration not prepared!");
+         ::Error("TClingClassInfo::InternalNext",
+                "Next called but iteration not prepared!");
       }
       return 0;
    }
@@ -1068,11 +1068,11 @@ void *TClingClassInfo::New(const ROOT::TMetaUtils::TNormalizedCtxt &normCtxt) co
    // Invoke a new expression to use the class constructor
    // that takes no arguments to create an object of this class type.
    if (!IsValid()) {
-      Error("TClingClassInfo::New()", "Called while invalid!");
+      ::Error("TClingClassInfo::New()", "Called while invalid!");
       return nullptr;
    }
    if (!IsLoaded()) {
-      Error("TClingClassInfo::New()", "Class is not loaded: %s",
+      ::Error("TClingClassInfo::New()", "Class is not loaded: %s",
             FullyQualifiedName(GetDecl()).c_str());
       return nullptr;
    }
@@ -1084,7 +1084,7 @@ void *TClingClassInfo::New(const ROOT::TMetaUtils::TNormalizedCtxt &normCtxt) co
       R__LOCKGUARD(gInterpreterMutex);
       auto RD = dyn_cast<CXXRecordDecl>(GetDecl());
       if (!RD) {
-         Error("TClingClassInfo::New()", "This is a namespace!: %s",
+         ::Error("TClingClassInfo::New()", "This is a namespace!: %s",
                FullyQualifiedName(GetDecl()).c_str());
          return nullptr;
       }
@@ -1103,7 +1103,7 @@ void *TClingClassInfo::New(const ROOT::TMetaUtils::TNormalizedCtxt &normCtxt) co
    obj = cf.ExecDefaultConstructor(this, kind, type_name,
                                    /*address=*/nullptr, /*nary=*/0);
    if (!obj) {
-      Error("TClingClassInfo::New()", "Call of default constructor "
+      ::Error("TClingClassInfo::New()", "Call of default constructor "
             "failed to return an object for class: %s",
             FullyQualifiedName(GetDecl()).c_str());
       return nullptr;
@@ -1117,11 +1117,11 @@ void *TClingClassInfo::New(int n, const ROOT::TMetaUtils::TNormalizedCtxt &normC
    // that takes no arguments to create an array object
    // of this class type.
    if (!IsValid()) {
-      Error("TClingClassInfo::New(n)", "Called while invalid!");
+      ::Error("TClingClassInfo::New(n)", "Called while invalid!");
       return nullptr;
    }
    if (!IsLoaded()) {
-      Error("TClingClassInfo::New(n)", "Class is not loaded: %s",
+      ::Error("TClingClassInfo::New(n)", "Class is not loaded: %s",
             FullyQualifiedName(GetDecl()).c_str());
       return nullptr;
    }
@@ -1134,7 +1134,7 @@ void *TClingClassInfo::New(int n, const ROOT::TMetaUtils::TNormalizedCtxt &normC
 
       auto RD = dyn_cast<CXXRecordDecl>(GetDecl());
       if (!RD) {
-         Error("TClingClassInfo::New(n)", "This is a namespace!: %s",
+         ::Error("TClingClassInfo::New(n)", "This is a namespace!: %s",
                FullyQualifiedName(GetDecl()).c_str());
          return nullptr;
       }
@@ -1153,7 +1153,7 @@ void *TClingClassInfo::New(int n, const ROOT::TMetaUtils::TNormalizedCtxt &normC
    obj = cf.ExecDefaultConstructor(this, kind, type_name,
                                    /*address=*/nullptr, /*nary=*/(unsigned long)n);
    if (!obj) {
-      Error("TClingClassInfo::New(n)", "Call of default constructor "
+      ::Error("TClingClassInfo::New(n)", "Call of default constructor "
             "failed to return an array of class: %s",
             FullyQualifiedName(GetDecl()).c_str());
       return nullptr;
@@ -1168,11 +1168,11 @@ void *TClingClassInfo::New(int n, void *arena, const ROOT::TMetaUtils::TNormaliz
    // array of objects of this class type in the given
    // memory arena.
    if (!IsValid()) {
-      Error("TClingClassInfo::New(n, arena)", "Called while invalid!");
+      ::Error("TClingClassInfo::New(n, arena)", "Called while invalid!");
       return nullptr;
    }
    if (!IsLoaded()) {
-      Error("TClingClassInfo::New(n, arena)", "Class is not loaded: %s",
+      ::Error("TClingClassInfo::New(n, arena)", "Class is not loaded: %s",
             FullyQualifiedName(GetDecl()).c_str());
       return nullptr;
    }
@@ -1185,7 +1185,7 @@ void *TClingClassInfo::New(int n, void *arena, const ROOT::TMetaUtils::TNormaliz
 
       auto RD = dyn_cast<CXXRecordDecl>(GetDecl());
       if (!RD) {
-         Error("TClingClassInfo::New(n, arena)", "This is a namespace!: %s",
+         ::Error("TClingClassInfo::New(n, arena)", "This is a namespace!: %s",
                FullyQualifiedName(GetDecl()).c_str());
          return nullptr;
       }
@@ -1213,11 +1213,11 @@ void *TClingClassInfo::New(void *arena, const ROOT::TMetaUtils::TNormalizedCtxt 
    // constructor that takes no arguments to create an
    // object of this class type in the given memory arena.
    if (!IsValid()) {
-      Error("TClingClassInfo::New(arena)", "Called while invalid!");
+      ::Error("TClingClassInfo::New(arena)", "Called while invalid!");
       return nullptr;
    }
    if (!IsLoaded()) {
-      Error("TClingClassInfo::New(arena)", "Class is not loaded: %s",
+      ::Error("TClingClassInfo::New(arena)", "Class is not loaded: %s",
             FullyQualifiedName(GetDecl()).c_str());
       return nullptr;
    }
@@ -1230,7 +1230,7 @@ void *TClingClassInfo::New(void *arena, const ROOT::TMetaUtils::TNormalizedCtxt 
 
       auto RD = dyn_cast<CXXRecordDecl>(GetDecl());
       if (!RD) {
-         Error("TClingClassInfo::New(arena)", "This is a namespace!: %s",
+         ::Error("TClingClassInfo::New(arena)", "This is a namespace!: %s",
                FullyQualifiedName(GetDecl()).c_str());
          return nullptr;
       }

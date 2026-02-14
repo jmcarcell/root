@@ -16,7 +16,9 @@
 
 using namespace std::string_literals;
 
-using namespace ROOT;
+// Avoid leaking ROOT names into the global scope when unity builds combine
+// multiple sources, which can create ambiguous lookups (e.g. ELogLevel).
+namespace ROOT {
 
 /** \class ROOT::RGeomHierarchy
 \ingroup webwidgets
@@ -191,3 +193,5 @@ void RGeomHierarchy::ClearOnClose(const std::shared_ptr<void> &handle)
    if (fWebWindow)
       fWebWindow->SetClearOnClose(handle);
 }
+
+} // namespace ROOT

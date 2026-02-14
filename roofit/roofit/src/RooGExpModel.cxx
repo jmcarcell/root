@@ -56,9 +56,9 @@ enum RooGExpBasis {
    coshBasisPlus = 43
 };
 
-enum BasisType { none = 0, expBasis = 1, sinBasis = 2, cosBasis = 3, sinhBasis = 4, coshBasis = 5 };
+enum GExpBasisType { none = 0, expBasis = 1, sinBasis = 2, cosBasis = 3, sinhBasis = 4, coshBasis = 5 };
 
-enum BasisSign { Both = 0, Plus = +1, Minus = -1 };
+enum GExpBasisSign { Both = 0, Plus = +1, Minus = -1 };
 
 } // namespace
 
@@ -269,7 +269,7 @@ double logErfC(double xx)
 /// to explicitly cancel the divergent exp(y*y) behaviour of
 /// CWERF for z = x + i y with large negative y
 
-std::complex<double> evalCerfApprox(double swt, double u, double c)
+std::complex<double> evalCerfApproxLocal(double swt, double u, double c)
 {
   static double rootpi= sqrt(atan2(0.,-1.));
   std::complex<double> z(swt*c,u+c);
@@ -282,16 +282,16 @@ std::complex<double> evalCerfApprox(double swt, double u, double c)
 
 
 // Calculate exp(-u^2) cwerf(swt*c + i(u+c)), taking care of numerical instabilities
-std::complex<double> evalCerf(double swt, double u, double c)
+std::complex<double> evalCerfLocal(double swt, double u, double c)
 {
   std::complex<double> z(swt*c,u+c);
-  return (z.imag()>-4.0) ? RooMath::faddeeva_fast(z)*std::exp(-u*u) : evalCerfApprox(swt,u,c) ;
+  return (z.imag()>-4.0) ? RooMath::faddeeva_fast(z)*std::exp(-u*u) : evalCerfApproxLocal(swt,u,c) ;
 }
 
 
 // Calculate Re(exp(-u^2) cwerf(i(u+c)))
 // added FMV, 08/17/03
-inline double evalCerfRe(double u, double c) {
+inline double evalCerfReLocal(double u, double c) {
   double expArg = u*2*c+c*c ;
   if (expArg<300) {
      return exp(expArg) * RooMath::erfc(u+c);
@@ -310,8 +310,8 @@ double RooGExpModel::evaluate() const
 {
   static double root2(sqrt(2.)) ;
 
-  BasisType basisType = (BasisType)( (_basisCode == 0) ? 0 : (_basisCode/10) + 1 );
-  BasisSign basisSign = (BasisSign)( _basisCode - 10*(basisType-1) - 2 ) ;
+  GExpBasisType basisType = (GExpBasisType)( (_basisCode == 0) ? 0 : (_basisCode/10) + 1 );
+  GExpBasisSign basisSign = (GExpBasisSign)( _basisCode - 10*(basisType-1) - 2 ) ;
 
   double fsign = _flip?-1:1 ;
 
@@ -348,7 +348,7 @@ double RooGExpModel::evaluate() const
     //double xprime = x/rtau ;
     //double c = sig/(root2*rtau) ;
     //double u = xprime/(2*c) ;
-    //double result = 0.5*evalCerf(fsign*u,c).real() ;  // sign=-1 !
+    //double result = 0.5*evalCerfLocal(fsign*u,c).real() ;  // sign=-1 !
 
     if (_basisCode!=0 && basisSign==Both) result *= 2 ;
     //cout << "1st form " << "x= " << x << " result= " << result << std::endl;
@@ -459,11 +459,11 @@ std::complex<double> RooGExpModel::calcSinConv(double sign, double sig, double t
 
   std::complex<double> eins(1,0);
   std::complex<double> k(1/tau,sign*omega);
-  //return (evalCerf(-sign*omega*tau,u1,c1)+evalCerf(0,u2,c2)*fsign*sign) / (eins + k*fsign*sign*rtau) ;
+  //return (evalCerfLocal(-sign*omega*tau,u1,c1)+evalCerfLocal(0,u2,c2)*fsign*sign) / (eins + k*fsign*sign*rtau) ;
 
-  return (evalCerf(-sign*omega*tau,u1,c1)+std::complex<double>(evalCerfRe(u2,c2),0)*fsign*sign) / (eins + k*fsign*sign*rtau) ;
+  return (evalCerfLocal(-sign*omega*tau,u1,c1)+std::complex<double>(evalCerfReLocal(u2,c2),0)*fsign*sign) / (eins + k*fsign*sign*rtau) ;
   // equivalent form, added FMV, 07/24/03
-  //return (evalCerf(-sign*omega*tau,-sign*u1,c1)+evalCerf(0,fsign*u2,c2)*fsign*sign) / (eins + k*fsign*sign*rtau) ;
+  //return (evalCerfLocal(-sign*omega*tau,-sign*u1,c1)+evalCerfLocal(0,fsign*u2,c2)*fsign*sign) / (eins + k*fsign*sign*rtau) ;
 }
 
 // added FMV,08/18/03
@@ -485,9 +485,9 @@ double RooGExpModel::calcSinConv(double sign, double sig, double tau, double rta
 
   double eins(1);
   double k(1/tau);
-  return (evalCerfRe(u1,c1)+evalCerfRe(u2,c2)*fsign*sign) / (eins + k*fsign*sign*rtau) ;
+  return (evalCerfReLocal(u1,c1)+evalCerfReLocal(u2,c2)*fsign*sign) / (eins + k*fsign*sign*rtau) ;
   // equivalent form, added FMV, 07/24/03
-  //return (evalCerf(-sign*u1,c1).real()+evalCerf(fsign*u2,c2).real()*fsign*sign) / (eins + k*fsign*sign*rtau) ;
+  //return (evalCerfLocal(-sign*u1,c1).real()+evalCerfLocal(fsign*u2,c2).real()*fsign*sign) / (eins + k*fsign*sign*rtau) ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -698,8 +698,8 @@ double RooGExpModel::analyticalIntegral(Int_t code, const char* rangeName) const
     ssfInt = (ssf.max(rangeName)-ssf.min(rangeName)) ;
   }
 
-  BasisType basisType = (BasisType)( (_basisCode == 0) ? 0 : (_basisCode/10) + 1 );
-  BasisSign basisSign = (BasisSign)( _basisCode - 10*(basisType-1) - 2 ) ;
+  GExpBasisType basisType = (GExpBasisType)( (_basisCode == 0) ? 0 : (_basisCode/10) + 1 );
+  GExpBasisSign basisSign = (GExpBasisSign)( _basisCode - 10*(basisType-1) - 2 ) ;
 
   double tau = (_basisCode!=noBasis)?(static_cast<RooAbsReal*>(basis().getParameter(1)))->getVal():0 ;
 
@@ -906,7 +906,7 @@ std::complex<double> RooGExpModel::evalCerfInt(double sign, double wt, double ta
   if (_asympInt) {
     diff = std::complex<double>(2,0) ;
   } else {
-    diff = std::complex<double>(sign,0.)*(evalCerf(wt,umin,c) - evalCerf(wt,umax,c) + RooMath::erf(umin) - RooMath::erf(umax));
+    diff = std::complex<double>(sign,0.)*(evalCerfLocal(wt,umin,c) - evalCerfLocal(wt,umax,c) + RooMath::erf(umin) - RooMath::erf(umax));
   }
   return std::complex<double>(tau/(1.+wt*wt),0)*std::complex<double>(1,wt)*diff;
 }
@@ -924,7 +924,7 @@ double RooGExpModel::evalCerfInt(double sign, double tau, double umin, double um
       // If integral is over >8 sigma, approximate with full integral
       diff = 2. ;
     } else {
-      diff = sign*(evalCerfRe(umin,c) - evalCerfRe(umax,c) + RooMath::erf(umin) - RooMath::erf(umax));
+      diff = sign*(evalCerfReLocal(umin,c) - evalCerfReLocal(umax,c) + RooMath::erf(umin) - RooMath::erf(umax));
     }
   }
   return tau*diff;

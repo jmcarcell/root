@@ -27,6 +27,8 @@
 #include <X11/keysym.h>
 #include <X11/xpm.h>
 
+#include "TGX11X11Wrappers.h"
+
 #include "TGX11.h"
 #include "TROOT.h"
 #include "TError.h"
@@ -133,12 +135,6 @@ static KeySymbolMap_t gKeyMap[] = {
    { XK_KP_Divide,       kKey_Slash },
    { 0,                  (EKeySym) 0 }
 };
-
-struct RXGCValues:XGCValues{};
-struct RXColor:XColor{};
-struct RXpmAttributes:XpmAttributes{};
-struct RXSetWindowAttributes:XSetWindowAttributes{};
-struct RVisual:Visual{};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -2364,8 +2360,9 @@ void TGX11::GetPasteBuffer(Window_t id, Atom_t atom, TString &text, Int_t &nchar
                              &actual_type, &actual_format,
                              &nitems, &bytes_after,
                              (unsigned char **) &data)
-         != Success)
-      break;
+          != Success) {
+         break;
+      }
 
       if (actual_type != XA_STRING) break;
 

@@ -102,12 +102,12 @@ PyThreadState *mainThreadState;
 
 // To acquire the GIL as described here:
 // https://docs.python.org/3/c-api/init.html#non-python-created-threads
-class PyGILRAII {
+class PyGILRAII_TPython {
    PyGILState_STATE m_GILState;
 
 public:
-   PyGILRAII() : m_GILState(PyGILState_Ensure()) {}
-   ~PyGILRAII() { PyGILState_Release(m_GILState); }
+   PyGILRAII_TPython() : m_GILState(PyGILState_Ensure()) {}
+   ~PyGILRAII_TPython() { PyGILState_Release(m_GILState); }
 };
 
 struct PyObjDeleter {
@@ -177,7 +177,7 @@ Bool_t TPython::Initialize()
 
    {
       // For the Python API calls
-      PyGILRAII gilRaii;
+      PyGILRAII_TPython gilRaii;
 
       // force loading of the ROOT module
       const int ret = PyRun_SimpleString("import ROOT");
@@ -220,7 +220,7 @@ Bool_t TPython::Import(const char *mod_name)
    if (!Initialize())
       return false;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    if (!CPyCppyy::Import(mod_name)) {
       return false;
@@ -280,7 +280,7 @@ void TPython::LoadMacro(const char *name)
    if (!Initialize())
       return;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    // obtain a reference to look for new classes later
    PyObjectRef old{PyDict_Values(gMainDict)};
@@ -345,7 +345,7 @@ void TPython::ExecScript(const char *name, int argc, const char **argv)
    if (!Initialize())
       return;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    // verify arguments
    if (!name) {
@@ -388,7 +388,7 @@ Bool_t TPython::Exec(const char *cmd, std::any *result, std::string const &resul
    if (!Initialize())
       return false;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    std::stringstream command;
    // Add the actual command
@@ -421,7 +421,7 @@ Bool_t TPython::Bind(TObject *object, const char *label)
    if (!(object && Initialize()))
       return false;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    // bind object in the main namespace
    TClass *klass = object->IsA();
@@ -449,7 +449,7 @@ void TPython::Prompt()
       return;
    }
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    // enter i/o interactive mode
    PyRun_InteractiveLoop(stdin, "\0");
@@ -465,7 +465,7 @@ Bool_t TPython::CPPInstance_Check(PyObject *pyobject)
    if (!Initialize())
       return false;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    // detailed walk through inheritance hierarchy
    return CPyCppyy::Instance_Check(pyobject);
@@ -480,7 +480,7 @@ Bool_t TPython::CPPInstance_CheckExact(PyObject *pyobject)
    if (!Initialize())
       return false;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    // direct pointer comparison of type member
    return CPyCppyy::Instance_CheckExact(pyobject);
@@ -496,7 +496,7 @@ Bool_t TPython::CPPOverload_Check(PyObject *pyobject)
    if (!Initialize())
       return false;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    // detailed walk through inheritance hierarchy
    return CPyCppyy::Overload_Check(pyobject);
@@ -511,7 +511,7 @@ Bool_t TPython::CPPOverload_CheckExact(PyObject *pyobject)
    if (!Initialize())
       return false;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    // direct pointer comparison of type member
    return CPyCppyy::Overload_CheckExact(pyobject);
@@ -526,7 +526,7 @@ void *TPython::CPPInstance_AsVoidPtr(PyObject *pyobject)
    if (!Initialize())
       return nullptr;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    // get held object (may be null)
    return CPyCppyy::Instance_AsVoidPtr(pyobject);
@@ -541,7 +541,7 @@ PyObject *TPython::CPPInstance_FromVoidPtr(void *addr, const char *classname, Bo
    if (!Initialize())
       return nullptr;
 
-   PyGILRAII gilRaii;
+   PyGILRAII_TPython gilRaii;
 
    // perform cast (the call will check TClass and addr, and set python errors)
    // give ownership, for ref-counting, to the python side, if so requested

@@ -30,6 +30,10 @@ ROOT_STANDARD_LIBRARY_PACKAGE(ROOTWebDisplay
        MathCore
 )
 
+# Unity builds cause header inclusion order changes and namespace collisions
+# (e.g. ELogLevel in TSystem vs ROOT::ELogLevel via RLogger.hxx).
+set_target_properties(ROOTWebDisplay PROPERTIES UNITY_BUILD OFF)
+
 ROOT_ADD_TEST_SUBDIRECTORY(test)
 
 if(qt6web)

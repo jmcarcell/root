@@ -26,18 +26,18 @@
 //- data ---------------------------------------------------------------------
 
 namespace {
-   class PyGILRAII {
+   class PyGILRAII_TPyArg {
       PyGILState_STATE m_GILState;
    public:
-      PyGILRAII() : m_GILState(PyGILState_Ensure()) { }
-      ~PyGILRAII() { PyGILState_Release(m_GILState); }
+      PyGILRAII_TPyArg() : m_GILState(PyGILState_Ensure()) { }
+      ~PyGILRAII_TPyArg() { PyGILState_Release(m_GILState); }
    };
 }
 
 //- constructor dispatcher ---------------------------------------------------
 void TPyArg::CallConstructor(PyObject *&pyself, PyObject *pyclass, const std::vector<TPyArg> &args)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    int nArgs = args.size();
    PyObject *pyargs = PyTuple_New(nArgs);
@@ -50,7 +50,7 @@ void TPyArg::CallConstructor(PyObject *&pyself, PyObject *pyclass, const std::ve
 ////////////////////////////////////////////////////////////////////////////////
 void CallConstructor(PyObject *&pyself, PyObject *pyclass)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    PyObject *pyargs = PyTuple_New(0);
    pyself = PyObject_Call(pyclass, pyargs, NULL);
@@ -60,7 +60,7 @@ void CallConstructor(PyObject *&pyself, PyObject *pyclass)
 //- generic dispatcher -------------------------------------------------------
 PyObject *TPyArg::CallMethod(PyObject *pymeth, const std::vector<TPyArg> &args)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    int nArgs = args.size();
    PyObject *pyargs = PyTuple_New(nArgs);
@@ -74,7 +74,7 @@ PyObject *TPyArg::CallMethod(PyObject *pymeth, const std::vector<TPyArg> &args)
 //- denstructor dispatcher ----------------------------------------------------
 void TPyArg::CallDestructor(PyObject *&pyself, PyObject *, const std::vector<TPyArg> &)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    Py_DecRef(pyself); // calls actual dtor if ref-count down to 0
 }
@@ -82,7 +82,7 @@ void TPyArg::CallDestructor(PyObject *&pyself, PyObject *, const std::vector<TPy
 ////////////////////////////////////////////////////////////////////////////////
 void TPyArg::CallDestructor(PyObject *&pyself)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    Py_DecRef(pyself);
 }
@@ -90,7 +90,7 @@ void TPyArg::CallDestructor(PyObject *&pyself)
 //- constructors/destructor --------------------------------------------------
 TPyArg::TPyArg(PyObject *pyobject)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    // Construct a TPyArg from a python object.
    Py_IncRef(pyobject);
@@ -102,7 +102,7 @@ TPyArg::TPyArg(PyObject *pyobject)
 
 TPyArg::TPyArg(Int_t value)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    fPyObject = PyLong_FromLong(value);
 }
@@ -112,7 +112,7 @@ TPyArg::TPyArg(Int_t value)
 
 TPyArg::TPyArg(Long_t value)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    fPyObject = PyLong_FromLong(value);
 }
@@ -122,7 +122,7 @@ TPyArg::TPyArg(Long_t value)
 
 TPyArg::TPyArg(Double_t value)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    fPyObject = PyFloat_FromDouble(value);
 }
@@ -132,7 +132,7 @@ TPyArg::TPyArg(Double_t value)
 
 TPyArg::TPyArg(const char *value)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    fPyObject = PyUnicode_FromString(value);
 }
@@ -142,7 +142,7 @@ TPyArg::TPyArg(const char *value)
 
 TPyArg::TPyArg(const TPyArg &s)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    Py_IncRef(s.fPyObject);
    fPyObject = s.fPyObject;
@@ -153,7 +153,7 @@ TPyArg::TPyArg(const TPyArg &s)
 
 TPyArg &TPyArg::operator=(const TPyArg &s)
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    if (&s != this) {
       Py_IncRef(s.fPyObject);
@@ -167,7 +167,7 @@ TPyArg &TPyArg::operator=(const TPyArg &s)
 
 TPyArg::~TPyArg()
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    Py_DecRef(fPyObject);
    fPyObject = NULL;
@@ -176,7 +176,7 @@ TPyArg::~TPyArg()
 //- public members -----------------------------------------------------------
 TPyArg::operator PyObject *() const
 {
-   PyGILRAII gilRaii;
+   PyGILRAII_TPyArg gilRaii;
 
    // Extract the python object.
    Py_IncRef(fPyObject);

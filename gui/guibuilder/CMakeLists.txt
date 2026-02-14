@@ -30,3 +30,6 @@ ROOT_STANDARD_LIBRARY_PACKAGE(GuiBld
     Graf
     MathCore
 )
+
+# Unity builds can merge source files with duplicated TU-local statics.
+set_target_properties(GuiBld PROPERTIES UNITY_BUILD OFF)

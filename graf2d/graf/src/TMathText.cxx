@@ -50,7 +50,7 @@ TMathText rendering is not implemented for the PDF output.
 PostScript output should be used instead.
 */
 
-const Double_t kPI      = TMath::Pi();
+constexpr Double_t kPITMathText = TMath::Pi();
 
 class TMathTextRenderer : public TText, public TAttFill,
                           public mathtext::math_text_renderer_t {
@@ -170,7 +170,7 @@ public:
 
       _angle_degree = angle_degree;
 
-      const float angle_radiant = _angle_degree * (kPI / 180.0);
+      const float angle_radiant = _angle_degree * (kPITMathText / 180.0);
 
       // Initialize the affine transform
       _pad_pixel_transform[0] = _pad_scale * cosf(angle_radiant);

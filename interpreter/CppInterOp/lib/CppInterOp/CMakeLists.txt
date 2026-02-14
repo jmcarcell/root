@@ -114,6 +114,10 @@ add_llvm_library(clangCppInterOp BUILDTREE_ONLY
   ${link_libs}
 )
 
+# CppInterOp's sources assume separate translation units; unity builds can
+# merge files and break overload resolution / internal declarations.
+set_target_properties(clangCppInterOp PROPERTIES UNITY_BUILD OFF)
+
 if(EMSCRIPTEN)
   if(BUILD_SHARED_LIBS)
   # FIXME: When dynamically linking the Emscripten shared library to the

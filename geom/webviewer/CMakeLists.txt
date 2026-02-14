@@ -29,3 +29,6 @@ ROOT_STANDARD_LIBRARY_PACKAGE(ROOTGeomViewer
     ROOTBrowserv7
   ${EXTRA_DICT_OPTS}
 )
+
+# Unity builds can change include order and create ambiguous symbols.
+set_target_properties(ROOTGeomViewer PROPERTIES UNITY_BUILD OFF)

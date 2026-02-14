@@ -31,6 +31,10 @@ ROOT_STANDARD_LIBRARY_PACKAGE(RooFitXRooFit
     inc/LinkDef.h
 )
 
+# Unity builds merge implementation files that define conflicting helpers/macros
+# (e.g. coutCapture.h, GETWS), causing ODR violations and preprocessor clashes.
+set_target_properties(RooFitXRooFit PROPERTIES UNITY_BUILD OFF)
+
 target_include_directories(RooFitXRooFit PRIVATE inc/RooFit)
 
 ROOT_ADD_TEST_SUBDIRECTORY(test)

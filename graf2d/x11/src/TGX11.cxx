@@ -53,6 +53,8 @@ by Olivier Couet (package X11INT).
 #include <X11/keysym.h>
 #include <X11/xpm.h>
 
+#include "TGX11X11Wrappers.h"
+
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
@@ -157,13 +159,6 @@ const char null_cursor_bits[] = {
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 static Cursor gNullCursor = 0;
-
-struct RXGCValues:XGCValues{};
-struct RXColor:XColor{};
-struct RXImage:XImage{};
-struct RXPoint:XPoint{};
-struct RXVisualInfo:XVisualInfo{};
-struct RVisual:Visual{};
 
 
 ////////////////////////////////////////////////////////////////////////////////

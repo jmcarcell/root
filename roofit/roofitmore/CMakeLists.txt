@@ -57,6 +57,10 @@ ROOT_STANDARD_LIBRARY_PACKAGE(RooFitMore
   ${EXTRA_DICT_OPTS}
 )
 
+# Unity builds can merge RooFitMore's embedded GSL code with the system GSL
+# headers, causing linkage conflicts.
+set_target_properties(RooFitMore PROPERTIES UNITY_BUILD OFF)
+
 target_include_directories(RooFitMore SYSTEM PRIVATE ${GSL_INCLUDE_DIR})
 target_link_libraries(RooFitMore PRIVATE ${GSL_LIBRARIES})
 

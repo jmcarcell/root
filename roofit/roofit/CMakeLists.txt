@@ -162,6 +162,10 @@ ROOT_STANDARD_LIBRARY_PACKAGE(RooFit
   ${EXTRA_DICT_OPTS}
 )
 
+# Unity builds can merge multiple RooFit model implementation files and cause
+# ODR violations (anonymous namespace enums/statics) or ambiguous lookups.
+set_target_properties(RooFit PROPERTIES UNITY_BUILD OFF)
+
 # For recent clang, this can facilitate auto-vectorisation.
 # In RooFit, the errno side effect is not needed, anyway:
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")

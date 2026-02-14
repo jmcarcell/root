@@ -81,3 +81,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(Ged
     TreePlayer
   ${EXTRA_DICT_OPTS}
 )
+
+# Unity builds merge multiple editor TUs and trigger ODR violations (shared enum
+# values like kCOLOR/kALPHA across different editors).
+set_target_properties(Ged PROPERTIES UNITY_BUILD OFF)

@@ -273,7 +273,11 @@ else()
       RGL
       Physics
   )
-endif()
+ endif()
+
+# Unity builds can merge TEve*GL translation units with duplicated anonymous
+# namespace helpers (e.g. subtract_and_normalize) and trigger ODR violations.
+set_target_properties(Eve PROPERTIES UNITY_BUILD OFF)
 
 target_include_directories(Eve PRIVATE
   ${FTGL_INCLUDE_DIRS})

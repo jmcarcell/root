@@ -30,4 +30,8 @@ ROOT_STANDARD_LIBRARY_PACKAGE(ROOTTPython
     Python3::Python
 )
 
+# Unity builds merge these sources into one TU; several of them define the same
+# TU-local helper (anonymous-namespace PyGILRAII), which then collides.
+set_target_properties(ROOTTPython PROPERTIES UNITY_BUILD OFF)
+
 ROOT_ADD_TEST_SUBDIRECTORY(test)

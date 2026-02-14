@@ -19,9 +19,9 @@
 #include "TROOT.h"
 #include <string>
 
-using namespace ROOT;
+namespace ROOT {
 
-ROOT::RLogChannel &ROOT::WebGUILog()
+RLogChannel &WebGUILog()
 {
    static ROOT::RLogChannel sLog("ROOT.WebGUI");
    return sLog;
@@ -381,3 +381,5 @@ std::string RWebDisplayArgs::GetQtEmbedQualifier(const void *qparent, const std:
    }
    return where;
 }
+
+} // namespace ROOT

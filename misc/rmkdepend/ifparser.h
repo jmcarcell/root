@@ -59,6 +59,9 @@
 
 /* $XFree86: xc/config/makedepend/ifparser.h,v 3.2 1996/12/30 13:57:56 dawes Exp $ */
 
+#ifndef ROOT_MISC_RMKDEPEND_IFPARSER
+#define ROOT_MISC_RMKDEPEND_IFPARSER
+
 #include <stdio.h>
 
 typedef int Bool;
@@ -81,3 +84,5 @@ const char *ParseIfExpression(
    long *
 #endif
 );
+
+#endif

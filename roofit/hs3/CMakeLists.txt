@@ -29,4 +29,8 @@ ROOT_STANDARD_LIBRARY_PACKAGE(RooFitHS3
     RooFitJSONInterface
 )
 
+# Unity builds merge several JSON factory TUs that intentionally define local
+# helpers/macros with the same names, causing ODR violations.
+set_target_properties(RooFitHS3 PROPERTIES UNITY_BUILD OFF)
+
 ROOT_ADD_TEST_SUBDIRECTORY(test)

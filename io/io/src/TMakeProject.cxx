@@ -649,16 +649,16 @@ void TMakeProject::GeneratePostDeclaration(FILE *fp, const TVirtualStreamerInfo 
 /// The 'name' is modified to return the change in the name,
 /// if any.
 
-static constexpr int str_length(const char* str)
+static constexpr int _str_length(const char* str)
 {
-    return *str ? 1 + str_length(str + 1) : 0;
+    return *str ? 1 + _str_length(str + 1) : 0;
 }
 
 TString TMakeProject::UpdateAssociativeToVector(const char *name)
 {
    TString newname( name );
 
-   constexpr auto auto_ptr_len = str_length("auto_ptr<");
+   constexpr auto auto_ptr_len = _str_length("auto_ptr<");
    if (strncmp(name, "auto_ptr<", auto_ptr_len) == 0) {
       newname = "unique_ptr<";
       newname += (name + auto_ptr_len);

@@ -261,8 +261,6 @@ public:
 
 } // namespace ROOT
 
-using namespace ROOT;
-
 using namespace std::string_literals;
 
 namespace {

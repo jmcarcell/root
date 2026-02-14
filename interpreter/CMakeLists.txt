@@ -238,12 +238,21 @@ if(builtin_llvm)
     set(_unset_log_level TRUE)
   endif()
 
+  # LLVM/Clang have their own build system assumptions and are not
+  # particularly friendly to CMake unity builds. Keep unity disabled for these
+  # external projects, but allow unity builds for the rest of ROOT.
+  set(_root_saved_unity_build ${CMAKE_UNITY_BUILD})
+  set(CMAKE_UNITY_BUILD OFF)
+
   #---Add the sub-directory excluding all the targets from all-----------------------------------------
   if(CMAKE_GENERATOR MATCHES "Xcode")
     add_subdirectory(llvm-project/llvm)
   else()
     add_subdirectory(llvm-project/llvm EXCLUDE_FROM_ALL)
   endif()
+
+  set(CMAKE_UNITY_BUILD ${_root_saved_unity_build})
+  unset(_root_saved_unity_build)
 
   if(DEFINED _unset_log_level)
     unset(CMAKE_MESSAGE_LOG_LEVEL)
@@ -404,7 +413,11 @@ else()
     set(_cxx_standard ${CMAKE_CXX_STANDARD})
     set(CMAKE_CXX_STANDARD 17)
 
+    set(_root_saved_unity_build ${CMAKE_UNITY_BUILD})
+    set(CMAKE_UNITY_BUILD OFF)
     add_subdirectory(llvm-project/clang EXCLUDE_FROM_ALL)
+    set(CMAKE_UNITY_BUILD ${_root_saved_unity_build})
+    unset(_root_saved_unity_build)
 
     set(CMAKE_CXX_STANDARD ${_cxx_standard})
   endif(builtin_clang)
@@ -474,7 +487,11 @@ if (builtin_cling)
   endif(LLVM_ENABLE_PIC AND NOT MSVC)
   # Avoid cling being installed under ROOTSYS/include.
   set(CLING_ROOT_BUILD ON)
+  set(_root_saved_unity_build ${CMAKE_UNITY_BUILD})
+  set(CMAKE_UNITY_BUILD OFF)
   add_subdirectory(cling EXCLUDE_FROM_ALL)
+  set(CMAKE_UNITY_BUILD ${_root_saved_unity_build})
+  unset(_root_saved_unity_build)
   add_dependencies(CLING ${CLING_LIBRARIES})
 
 

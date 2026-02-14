@@ -137,4 +137,8 @@ ROOT_STANDARD_LIBRARY_PACKAGE(RooStats
   ${EXTRA_DICT_OPTS}
 )
 
+# Unity builds can merge unrelated translation units and break header include
+# ordering/macros (e.g. IsNaN), leading to compile failures.
+set_target_properties(RooStats PROPERTIES UNITY_BUILD OFF)
+
 ROOT_ADD_TEST_SUBDIRECTORY(test)

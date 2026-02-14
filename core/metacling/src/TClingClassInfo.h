@@ -46,6 +46,7 @@ namespace clang {
    class CXXMethodDecl;
    class FunctionTemplateDecl;
    class ValueDecl;
+   class Type;
 }
 
 namespace ROOT {

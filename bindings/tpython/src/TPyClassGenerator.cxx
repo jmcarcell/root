@@ -26,11 +26,11 @@
 #include <typeinfo>
 
 namespace {
-   class PyGILRAII {
+   class PyGILRAII_TPyClassGenerator {
       PyGILState_STATE m_GILState;
    public:
-      PyGILRAII() : m_GILState(PyGILState_Ensure()) { }
-      ~PyGILRAII() { PyGILState_Release(m_GILState); }
+      PyGILRAII_TPyClassGenerator() : m_GILState(PyGILState_Ensure()) { }
+      ~PyGILRAII_TPyClassGenerator() { PyGILState_Release(m_GILState); }
    };
 }
 
@@ -49,7 +49,7 @@ TClass *TPyClassGenerator::GetClass(const char *name, Bool_t load, Bool_t silent
    if (!load || !name)
       return 0;
 
-   PyGILRAII thePyGILRAII;
+   PyGILRAII_TPyClassGenerator thePyGILRAII;
 
    // first, check whether the name is of a module
    PyObject *modules = PySys_GetObject(const_cast<char *>("modules"));

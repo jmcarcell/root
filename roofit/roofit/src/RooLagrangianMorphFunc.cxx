@@ -3113,13 +3113,13 @@ std::string LMIFace::create(RooFactoryWSTool &ft, const char * /*typeName*/, con
 
 static Int_t init();
 
-int dummy = init();
+int gRooLagrangianMorphFuncDummy = init();
 
 Int_t init()
 {
    RooFactoryWSTool::IFace *iface = new LMIFace;
    RooFactoryWSTool::registerSpecial("lagrangianmorph", iface);
-   (void)dummy;
+   (void)gRooLagrangianMorphFuncDummy;
    return 0;
 }
 

@@ -88,6 +88,13 @@ target_sources(Core PRIVATE
   src/TVirtualStreamerInfo.cxx
 )
 
+# These translation units define identical internal helpers; keep them out of unity builds.
+set_source_files_properties(
+  src/TViewPubDataMembers.cxx
+  src/TViewPubFunctions.cxx
+  PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON
+)
+
 target_include_directories(Core
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>

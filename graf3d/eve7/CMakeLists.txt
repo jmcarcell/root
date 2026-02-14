@@ -141,6 +141,10 @@ ROOT_STANDARD_LIBRARY_PACKAGE(ROOTEve
   ${EXTRA_DICT_OPTS}
 )
 
+# Unity builds merge bundled GLU C sources that assume separate translation
+# units (conflicting static helpers/macros like ComputeNormal/Swap).
+set_target_properties(ROOTEve PROPERTIES UNITY_BUILD OFF)
+
 target_link_libraries(ROOTEve PUBLIC nlohmann_json::nlohmann_json)
 # this is required for glew
 target_include_directories(ROOTEve PRIVATE ${CMAKE_SOURCE_DIR}/graf3d/eve7)

@@ -26,20 +26,21 @@ Iteration can only be done via the TIterator interfaces.
 #include "TDictionary.h"
 #include "THashList.h"
 
-
 ////////////////////////////////////////////////////////////////////////////////
 /// loop over all base classes and add them to the container.
 
-static void AddBasesClasses(TList &bases, TClass *cl)
+static void AddBasesClasses_DataMembers(TList &bases, TClass *cl)
 {
    TIter nextBaseClass(cl->GetListOfBases());
    TBaseClass *base;
-   while ((base = (TBaseClass*) nextBaseClass())) {
-      if (!base->GetClassPointer()) continue;
-      if (!(base->Property() & kIsPublic)) continue;
+   while ((base = (TBaseClass *)nextBaseClass())) {
+      if (!base->GetClassPointer())
+         continue;
+      if (!(base->Property() & kIsPublic))
+         continue;
 
       bases.Add(base->GetClassPointer());
-      AddBasesClasses(bases,base->GetClassPointer());
+      AddBasesClasses_DataMembers(bases, base->GetClassPointer());
    }
 }
 
@@ -50,7 +51,7 @@ TViewPubDataMembers::TViewPubDataMembers(TClass *cl /* = 0 */)
 {
    if (cl) {
       fClasses.Add(cl);
-      AddBasesClasses(fClasses,cl);
+      AddBasesClasses_DataMembers(fClasses, cl);
    }
 }
 

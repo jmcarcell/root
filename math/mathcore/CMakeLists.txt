@@ -186,6 +186,19 @@ ROOT_STANDARD_LIBRARY_PACKAGE(MathCore
     ${MATHCORE_LIBRARIES}
 )
 
+# Some translation units intentionally define identical TU-local helpers/macros
+# and cannot be compiled together under unity builds.
+set_source_files_properties(
+  src/BrentMinimizer1D.cxx
+  src/BrentRootFinder.cxx
+  src/MixMaxEngineImpl17.cxx
+  src/MixMaxEngineImpl240.cxx
+  src/MixMaxEngineImpl256.cxx
+  PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON
+)
+
+
+
 target_link_libraries(MathCore PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 
 ROOT_ADD_TEST_SUBDIRECTORY(test)
