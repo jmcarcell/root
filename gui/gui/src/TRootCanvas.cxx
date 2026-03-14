@@ -75,9 +75,6 @@ drawing area. The widgets used are the new native ROOT GUI widgets.
 
 
 // Canvas menu command ids
-// NOTE: With CMake unity builds enabled, multiple sources can end up in the same
-// translation unit. Prefix these ids to avoid collisions with other GUI sources
-// that define similarly-named enums.
 enum ERootCanvasCommands {
    kCanvasFileNewCanvas,
    kCanvasFileOpen,

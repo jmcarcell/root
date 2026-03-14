@@ -33,11 +33,9 @@ static void AddBasesClasses_DataMembers(TList &bases, TClass *cl)
 {
    TIter nextBaseClass(cl->GetListOfBases());
    TBaseClass *base;
-   while ((base = (TBaseClass *)nextBaseClass())) {
-      if (!base->GetClassPointer())
-         continue;
-      if (!(base->Property() & kIsPublic))
-         continue;
+   while ((base = (TBaseClass*) nextBaseClass())) {
+      if (!base->GetClassPointer()) continue;
+      if (!(base->Property() & kIsPublic)) continue;
 
       bases.Add(base->GetClassPointer());
       AddBasesClasses_DataMembers(bases, base->GetClassPointer());

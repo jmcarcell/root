@@ -50,7 +50,6 @@ set(sources
 
 add_library(CPyCppyy SHARED ${headers} ${sources})
 
-# CPyCppyy triggers ODR violations under CMake unity builds.
 set_target_properties(CPyCppyy PROPERTIES UNITY_BUILD OFF)
 # Set the suffix to '.so' and the prefix to 'lib'
 set_target_properties(CPyCppyy PROPERTIES  ${ROOT_LIBRARY_PROPERTIES})
