@@ -27,8 +27,6 @@
 
 using namespace std::string_literals;
 
-// Avoid leaking ROOT names into the global scope when unity builds combine
-// multiple sources, which can create ambiguous lookups (e.g. ELogLevel).
 namespace ROOT {
 
 

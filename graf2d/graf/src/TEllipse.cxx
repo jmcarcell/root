@@ -278,7 +278,8 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
          gVirtualX->DrawLine(px1-4, pTy+4, px1-4, pTy-4);
          gVirtualX->DrawLine(px1-4, pTy-4, px1+4, pTy-4);
          gVirtualX->DrawLine(px1+4, pTy-4, px1+4, pTy+4);
-      } else {
+      }
+      else {
          sdx = this->GetX1()-gPad->AbsPixeltoX(px);
          sdy = this->GetY1()-gPad->AbsPixeltoY(py);
       }
@@ -295,25 +296,29 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       pRx = gPad->XtoAbsPixel(fR1+fX1);
       pTop = pL = pR = pBot = pINSIDE = kFALSE;
       if ((TMath::Abs(px - pTx) < kMaxDiff) &&
-          (TMath::Abs(py - pTy) < kMaxDiff)) { // top edge
+          (TMath::Abs(py - pTy) < kMaxDiff)) {             // top edge
          pTop = kTRUE;
          gPad->SetCursor(kTopSide);
-      } else if ((TMath::Abs(px - pBx) < kMaxDiff) &&
-                 (TMath::Abs(py - pBy) < kMaxDiff)) { // bottom edge
+      }
+      else
+      if ((TMath::Abs(px - pBx) < kMaxDiff) &&
+          (TMath::Abs(py - pBy) < kMaxDiff)) {             // bottom edge
          pBot = kTRUE;
          gPad->SetCursor(kBottomSide);
-      } else if ((TMath::Abs(py - pLy) < kMaxDiff) &&
-                 (TMath::Abs(px - pLx) < kMaxDiff)) { // left edge
+      }
+      else
+      if ((TMath::Abs(py - pLy) < kMaxDiff) &&
+          (TMath::Abs(px - pLx) < kMaxDiff)) {             // left edge
          pL = kTRUE;
          gPad->SetCursor(kLeftSide);
-      } else if ((TMath::Abs(py - pRy) < kMaxDiff) &&
-                 (TMath::Abs(px - pRx) < kMaxDiff)) { // right edge
+      }
+      else
+      if ((TMath::Abs(py - pRy) < kMaxDiff) &&
+          (TMath::Abs(px - pRx) < kMaxDiff)) {             // right edge
          pR = kTRUE;
          gPad->SetCursor(kRightSide);
-      } else {
-         pINSIDE = kTRUE;
-         gPad->SetCursor(kMove);
       }
+      else {pINSIDE= kTRUE; gPad->SetCursor(kMove); }
       pxold = px;  pyold = py;
 
       break;

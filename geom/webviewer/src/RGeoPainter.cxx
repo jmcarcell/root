@@ -15,8 +15,6 @@
 #include "TVirtualPad.h"
 #include "TGeoTrack.h"
 
-// Avoid leaking ROOT names into the global scope when unity builds combine
-// multiple sources, which can create ambiguous lookups (e.g. ELogLevel).
 namespace ROOT {
 
 RGeoPainter::RGeoPainter(TGeoManager *manager) : TVirtualGeoPainter(manager)
