@@ -1582,8 +1582,8 @@ function(ROOT_PYTHON_PACKAGE pkgname)
   # It's 10x faster to compile all in one go than in single invocations
   add_custom_command(
     OUTPUT ${bytecode_stamp}
-    COMMAND ${Python3_EXECUTABLE} -B -m py_compile ${py_sources_in_build_tree}
-    COMMAND ${Python3_EXECUTABLE} -B -O -m py_compile ${py_sources_in_build_tree}
+    COMMAND ${Python3_EXECUTABLE} -m py_compile ${py_sources_in_build_tree}
+    COMMAND ${Python3_EXECUTABLE} -O -m py_compile ${py_sources_in_build_tree}
     COMMAND ${CMAKE_COMMAND} -E touch ${bytecode_stamp}
     DEPENDS ${py_sources_in_build_tree}
     COMMENT "Compiling ${pkgname} Python sources"
